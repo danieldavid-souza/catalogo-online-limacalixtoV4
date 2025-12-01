@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelEditBtn = document.getElementById('cancel-edit');
 
     // --- LÓGICA DE UPLOAD DE IMAGEM ---
-    const CLOUDINARY_CLOUD_NAME = 'diax6fx1n'; // <-- SUBSTITUA PELO SEU CLOUD NAME
-    const CLOUDINARY_UPLOAD_PRESET = 'catalogo-lima-calixto'; // <-- SUBSTITUA PELO SEU UPLOAD PRESET
+    const CLOUDINARY_CLOUD_NAME = 'dayx6fx1n'; // <-- SUBSTITUA PELO SEU CLOUD NAME
+    const CLOUDINARY_UPLOAD_PRESET = 'ml_default'; // <-- SUBSTITUA PELO SEU UPLOAD PRESET
 
     const uploadImageBtn = document.getElementById('upload-image-btn');
     const imageUploadInput = document.getElementById('image-upload-input');
@@ -36,14 +36,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData,
             });
 
-            if (!response.ok) throw new Error('Falha no upload para o Cloudinary.');
+            if (!response.ok) {
+                // Captura e exibe o erro específico retornado pelo Cloudinary
+                const errorData = await response.json();
+                throw new Error(`Falha no upload: ${errorData.error.message}`);
+            }
 
             const result = await response.json();
             imageUrlField.value = result.secure_url; // Cloudinary retorna a URL segura em 'secure_url'
             imagePreview.innerHTML = `<p>Pré-visualização:</p><img src="${result.secure_url}" alt="Preview">`;
             alert('Banner enviado com sucesso!');
         } catch (error) {
-            alert('Ocorreu um erro ao enviar o banner.');
+            // Exibe a mensagem de erro detalhada
+            alert(`Ocorreu um erro ao enviar o banner: ${error.message}`);
             console.error('Erro no upload:', error);
         } finally {
             uploadImageBtn.textContent = 'Fazer Upload do Banner';
