@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npm install --platform=linux --arch=x64 --build-from-source sqlite3",
    "dev": "nodemon server.js"
   },
   "keywords": [],
