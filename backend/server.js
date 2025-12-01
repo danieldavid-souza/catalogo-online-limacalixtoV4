@@ -18,18 +18,10 @@ const db = new sqlite3.Database('./catalog.db', (err) => {
     } else {
         console.log("Conectado ao banco de dados SQLite.");
         // Cria a tabela de produtos se ela não existir
-        db.run(`CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            description TEXT,
-            price REAL,
-            category TEXT,
-            google_drive_link TEXT,
-            image_url TEXT,
-            on_sale INTEGER DEFAULT 0
-        )`, (err) => {
+        // Usaremos uma Tabela Virtual FTS5 para busca inteligente
+        db.run(`CREATE VIRTUAL TABLE IF NOT EXISTS products_fts USING fts5(name, description, category, content='products', content_rowid='id')`, (err) => {
             if (err) {
-                console.error("Erro ao criar a tabela 'products'", err.message);
+                console.error("Erro ao criar a tabela virtual FTS 'products_fts'", err.message);
             } else {
                 console.log("Tabela 'products' garantida.");
             }
@@ -62,30 +54,20 @@ app.get('/', (req, res) => {
 
 // ROTA 1: Listar todos os produtos (Read)
 app.get('/api/products', (req, res) => {
-    const { search, category, on_sale } = req.query;
-    let sql = "SELECT * FROM products";
+    const { search } = req.query;
+    let sql;
     const params = [];
-    const conditions = [];
 
     if (search) {
-        conditions.push("name LIKE ?");
-        params.push(`%${search}%`);
+        // A busca agora usa a tabela FTS, que é muito mais poderosa
+        // O 'ORDER BY rank' coloca os resultados mais relevantes primeiro
+        sql = `SELECT p.* FROM products p JOIN products_fts fts ON p.id = fts.rowid WHERE fts.products_fts MATCH ? ORDER BY rank`;
+        // Adicionamos '*' para permitir buscas parciais (prefixo)
+        params.push(search + '*');
+    } else {
+        sql = "SELECT * FROM products ORDER BY name";
     }
 
-    if (category) {
-        conditions.push("category = ?");
-        params.push(category);
-    }
-
-    if (on_sale === '1') {
-        conditions.push("on_sale = ?");
-        params.push(1);
-    }
-
-    if (conditions.length > 0) {
-        sql += " WHERE " + conditions.join(" AND ");
-    }
-    sql += " ORDER BY name";
     db.all(sql, params, (err, rows) => {
         if (err) {
             res.status(500).json({ "error": err.message });
@@ -137,6 +119,13 @@ app.post('/api/products', (req, res) => {
             "message": "Produto cadastrado com sucesso!",
             "data": { id: this.lastID, ...req.body }
         });
+
+        // Sincroniza a tabela FTS com os novos dados
+        db.run(`INSERT INTO products_fts(rowid, name, description, category) VALUES(?, ?, ?, ?)`,
+            [this.lastID, name, description, category], (syncErr) => {
+            if (syncErr) console.error("Erro ao sincronizar FTS (insert):", syncErr.message);
+        });
+
     });
 });
 
@@ -167,6 +156,12 @@ app.put('/api/products/:id', (req, res) => {
                 "message": `Produto com ID ${req.params.id} atualizado com sucesso.`,
                 "changes": this.changes
             });
+
+            // Sincroniza a tabela FTS com os dados atualizados
+            db.run(`INSERT INTO products_fts(products_fts, rowid, name, description, category) VALUES('delete', ?, ?, ?, ?);`, [req.params.id, name, description, category]);
+            db.run(`INSERT INTO products_fts(rowid, name, description, category) VALUES(?, ?, ?, ?)`,
+                [req.params.id, name, description, category]);
+
         }
     });
 });
@@ -183,6 +178,12 @@ app.delete('/api/products/:id', (req, res) => {
             res.status(404).json({ "message": "Produto não encontrado." });
         } else {
             res.json({ "message": `Produto com ID ${req.params.id} deletado com sucesso.`, "changes": this.changes });
+            
+            // Sincroniza a tabela FTS removendo o produto
+            db.run(`INSERT INTO products_fts(products_fts, rowid) VALUES('delete', ?)`,
+                [req.params.id], (syncErr) => {
+                if (syncErr) console.error("Erro ao sincronizar FTS (delete):", syncErr.message);
+            });
         }
     });
 });

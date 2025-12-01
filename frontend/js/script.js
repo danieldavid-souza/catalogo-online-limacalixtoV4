@@ -48,9 +48,11 @@ function renderProducts() {
     }
 
     // 2. Filtrar por categoria
-    const selectedCategory = document.querySelector('input[name="category"]:checked');
-    if (selectedCategory && selectedCategory.value) {
-        filteredProducts = filteredProducts.filter(p => p.category === selectedCategory.value);
+    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+                                    .map(cb => cb.value)
+                                    .filter(Boolean); // Remove valores vazios
+    if (selectedCategories.length > 0) {
+        filteredProducts = filteredProducts.filter(p => selectedCategories.includes(p.category));
     }
 
     // 3. Filtrar por promoção
@@ -109,13 +111,12 @@ function populateCategoryFilters() {
 
     const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
     categoryFiltersContainer.innerHTML = `
-        <label>
-            <input type="radio" name="category" value="" checked> Todos
-        </label>
+        <!-- O filtro "Todos" é o padrão quando nada está selecionado -->
     `;
     categories.forEach(cat => {
         const label = document.createElement('label');
-        label.innerHTML = `<input type="radio" name="category" value="${cat}"> ${cat}`;
+        // Trocamos 'radio' por 'checkbox'
+        label.innerHTML = `<input type="checkbox" name="category" value="${cat}"> ${cat}`;
         categoryFiltersContainer.appendChild(label);
     });
 
