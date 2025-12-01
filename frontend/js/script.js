@@ -37,6 +37,7 @@ async function fetchAllProducts() {
  */
 function renderProducts() {
     if (!productGrid) return;
+    productGrid.innerHTML = ''; // Limpa o grid antes de renderizar
 
     let filteredProducts = [...allProducts];
 
@@ -82,17 +83,21 @@ function renderProducts() {
     }
 
     filteredProducts.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.dataset.id = product.id;
-        card.innerHTML = `
-            ${product.on_sale ? '<div class="sale-tag">OFERTA</div>' : ''}
-            <img src="${product.image_url || 'https://via.placeholder.com/300x300'}" alt="${product.name}" class="product-card-img">
-            <h3>${product.name}</h3>
-            <p class="category">${product.category || 'Serviço'}</p>
-            <p class="price">R$ ${product.price ? product.price.toFixed(2) : 'Consulte'}</p>
-        `;
-        productGrid.appendChild(card);
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.dataset.id = product.id;
+            card.innerHTML = `
+                ${product.on_sale ? '<div class="sale-tag">OFERTA</div>' : ''}
+                <img src="${product.image_url || 'https://via.placeholder.com/300x300'}" alt="${product.name}" class="product-card-img">
+                <h3>${product.name}</h3>
+                <p class="category">${product.category || 'Serviço'}</p>
+                <p class="price">R$ ${product.price ? product.price.toFixed(2) : 'Consulte'}</p>
+                <div class="card-buttons">
+                    <button class="btn btn-primary btn-view-details" data-id="${product.id}">Ver Detalhes</button>
+                    ${product.google_drive_link ? `<a href="${product.google_drive_link}" target="_blank" class="btn btn-secondary btn-mockups">Ver Mockups</a>` : ''}
+                </div>
+            `;
+            productGrid.appendChild(card);
     });
 }
 
@@ -124,10 +129,11 @@ async function openProductModal(productId) {
     try {
         const response = await fetch(`${apiBaseUrl}/products/${productId}`);
         const { data } = await response.json();
-        const modalBody = document.getElementById('modalBody');
-        const seuNumeroWhatsapp = '5511999999999'; // Substitua
+        const modalBody = document.getElementById('modalBody'); // Certifique-se de que este ID existe no seu HTML
+        const seuNumeroWhatsapp = '5532991657472'; // Substitua
         const mensagem = encodeURIComponent(`Olá! Tenho interesse no produto: *${data.name}*.`);
 
+        // Adiciona a imagem do produto no modal
         modalBody.innerHTML = `
             <h2>${data.name}</h2>
             <p>${data.description || 'Sem descrição detalhada.'}</p>
@@ -137,7 +143,7 @@ async function openProductModal(productId) {
                 <a href="https://wa.me/${seuNumeroWhatsapp}?text=${mensagem}" target="_blank" class="btn btn-primary">
                     <i class="fab fa-whatsapp"></i> Pedir no WhatsApp
                 </a>
-                ${data.google_drive_link ? `<a href="${data.google_drive_link}" target="_blank" class="btn btn-secondary">Ver Mockups</a>` : ''}
+                <!-- O botão "Ver Mockups" foi movido para o card do produto -->
             </div>
         `;
         productModal.style.display = 'flex';
@@ -208,9 +214,9 @@ function init() {
 
     document.addEventListener('click', (e) => {
         // Abrir modal do produto
-        const card = e.target.closest('.product-card');
-        if (card) {
-            openProductModal(card.dataset.id);
+        const viewDetailsBtn = e.target.closest('.btn-view-details'); // Agora o modal abre ao clicar no botão "Ver Detalhes"
+        if (viewDetailsBtn) {
+            openProductModal(viewDetailsBtn.dataset.id);
             return;
         }
 
