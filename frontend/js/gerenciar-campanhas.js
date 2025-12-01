@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
             imageUrlField.value = result.secure_url; // Cloudinary retorna a URL segura em 'secure_url'
-            imagePreview.innerHTML = `<p>Pré-visualização:</p><img src="${result.data.link}" alt="Preview">`;
+            imagePreview.innerHTML = `<p>Pré-visualização:</p><img src="${result.secure_url}" alt="Preview">`;
             alert('Banner enviado com sucesso!');
         } catch (error) {
             alert('Ocorreu um erro ao enviar o banner.');
