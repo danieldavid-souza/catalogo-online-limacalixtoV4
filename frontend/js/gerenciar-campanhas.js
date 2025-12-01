@@ -1,11 +1,56 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const apiUrl = 'http://localhost:3000/api/campaigns';
+    // const apiUrl = 'http://localhost:3000/api/campaigns';
+    const apiUrl = 'https://catalogo-limacalixto-api.onrender.com/api/campaigns'; // URL do seu backend no Render
 
     const campaignForm = document.getElementById('campaign-form');
     const campaignList = document.getElementById('campaign-list');
     const formTitle = document.getElementById('form-title');
     const campaignIdField = document.getElementById('campaign-id');
     const cancelEditBtn = document.getElementById('cancel-edit');
+
+    // --- LÓGICA DE UPLOAD DE IMAGEM ---
+    const CLOUDINARY_CLOUD_NAME = 'diax6fx1n'; // <-- SUBSTITUA PELO SEU CLOUD NAME
+    const CLOUDINARY_UPLOAD_PRESET = 'catalogo-lima-calixto'; // <-- SUBSTITUA PELO SEU UPLOAD PRESET
+
+    const uploadImageBtn = document.getElementById('upload-image-btn');
+    const imageUploadInput = document.getElementById('image-upload-input');
+    const imageUrlField = document.getElementById('image_url');
+    const imagePreview = document.getElementById('image-preview');
+
+    uploadImageBtn.addEventListener('click', () => imageUploadInput.click());
+
+    imageUploadInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadImageBtn.textContent = 'Enviando...';
+        uploadImageBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        try {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) throw new Error('Falha no upload para o Cloudinary.');
+
+            const result = await response.json();
+            imageUrlField.value = result.secure_url; // Cloudinary retorna a URL segura em 'secure_url'
+            imagePreview.innerHTML = `<p>Pré-visualização:</p><img src="${result.data.link}" alt="Preview">`;
+            alert('Banner enviado com sucesso!');
+        } catch (error) {
+            alert('Ocorreu um erro ao enviar o banner.');
+            console.error('Erro no upload:', error);
+        } finally {
+            uploadImageBtn.textContent = 'Fazer Upload do Banner';
+            uploadImageBtn.disabled = false;
+            imageUploadInput.value = '';
+        }
+    });
 
     // Função para buscar e exibir as campanhas
     const fetchCampaigns = async () => {
@@ -39,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         campaignIdField.value = '';
         formTitle.textContent = 'Adicionar Nova Campanha';
         cancelEditBtn.style.display = 'none';
+        imagePreview.innerHTML = ''; // Limpa a pré-visualização
     };
 
     // Evento de submit do formulário (Criar/Atualizar)
@@ -106,6 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('title').value = data.title;
                 document.getElementById('description').value = data.description;
                 document.getElementById('image_url').value = data.image_url;
+
+                // Mostra a pré-visualização da imagem existente
+                imagePreview.innerHTML = data.image_url ? `<p>Pré-visualização:</p><img src="${data.image_url}" alt="Preview">` : '';
                 
                 cancelEditBtn.style.display = 'inline-block';
                 window.scrollTo(0, 0);

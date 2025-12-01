@@ -669,3 +669,16 @@ input:checked + .slider:before { transform: translateX(22px); }
         grid-template-columns: 1fr; /* Força uma única coluna */
     }
 }
+
+/* Estilos para o preview da imagem no formulário de admin */
+.image-preview-container {
+    margin-top: 1rem;
+}
+
+.image-preview-container img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 5px;
+    border: 1px solid #424242;
+    object-fit: cover;
+}

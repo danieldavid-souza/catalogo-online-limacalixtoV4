@@ -11,6 +11,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelEditBtn = document.getElementById('cancel-edit');
     const campaignFilter = document.getElementById('campaign-filter');
 
+    // --- LÓGICA DE UPLOAD DE IMAGEM ---
+    const CLOUDINARY_CLOUD_NAME = 'diax6fx1n'; // <-- SUBSTITUA PELO SEU CLOUD NAME
+    const CLOUDINARY_UPLOAD_PRESET = 'catalogo-lima-calixto'; // <-- SUBSTITUA PELO SEU UPLOAD PRESET
+
+    const uploadImageBtn = document.getElementById('upload-image-btn');
+    const imageUploadInput = document.getElementById('image-upload-input');
+    const imageUrlField = document.getElementById('image_url');
+    const imagePreview = document.getElementById('image-preview');
+
+    // Abre o seletor de arquivos ao clicar no botão
+    uploadImageBtn.addEventListener('click', () => imageUploadInput.click());
+
+    // Lida com a seleção do arquivo
+    imageUploadInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadImageBtn.textContent = 'Enviando...';
+        uploadImageBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        try {
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) throw new Error('Falha no upload para o Cloudinary.');
+
+            const result = await response.json();
+            const imgUrl = result.secure_url; // Cloudinary retorna a URL segura em 'secure_url'
+
+            imageUrlField.value = imgUrl; // Preenche o campo oculto com a URL
+            imagePreview.innerHTML = `<p>Pré-visualização:</p><img src="${imgUrl}" alt="Preview">`;
+            alert('Imagem enviada com sucesso!');
+        } catch (error) {
+            console.error('Erro no upload:', error);
+            alert('Ocorreu um erro ao enviar a imagem. Tente novamente.');
+        } finally {
+            uploadImageBtn.textContent = 'Fazer Upload da Imagem';
+            uploadImageBtn.disabled = false;
+            imageUploadInput.value = ''; // Limpa o input de arquivo
+        }
+    });
+
     let allProducts = []; // Armazena todos os produtos para filtrar no frontend
 
     // Função para buscar e exibir os produtos
@@ -76,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         productIdField.value = '';
         formTitle.textContent = 'Adicionar Novo Produto';
         cancelEditBtn.style.display = 'none';
+        imagePreview.innerHTML = ''; // Limpa a pré-visualização da imagem
     };
 
     // Evento de submit do formulário (para Criar e Atualizar)
@@ -158,6 +207,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('image_url').value = data.image_url;
                 document.getElementById('on_sale').checked = data.on_sale === 1;
                 
+                // Mostra a pré-visualização da imagem existente
+                imagePreview.innerHTML = data.image_url ? `<p>Pré-visualização:</p><img src="${data.image_url}" alt="Preview">` : '';
+
                 cancelEditBtn.style.display = 'inline-block'; // Mostra o botão de cancelar
                 window.scrollTo(0, 0); // Rola a página para o topo para ver o formulário
 
