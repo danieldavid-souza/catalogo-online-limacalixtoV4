@@ -1,0 +1,389 @@
+[
+  {
+    "id": 1,
+    "nome": "Azulejo Personalizado de Natal – Família",
+    "descricao": "Transforme o carinho e a alegria do Natal em uma peça decorativa cheia de significado com nosso Azulejo Personalizado de Natal – Família. Com um design festivo e mensagens inspiradoras, este azulejo traz espaço para fotos especiais, eternizando momentos inesquecíveis ao lado de quem você ama.\r\n\r\nProduzido com impressão de alta qualidade, cores vibrantes e acabamento impecável, ele é ideal para decorar salas, escritórios, cantinhos natalinos ou até para presentear familiares e amigos. Acompanha suporte para facilitar a exposição em qualquer ambiente.",
+    "categoria": "sublimacao",
+    "preco": 40,
+    "imagem": "imagens/sublimacao/imagem-1764258132606-201531498.jpg",
+    "estoque": 5,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/1tVLKFvDgLznlYiPaGmGq6MXffeggdCU3?usp=sharing",
+    "especificacoes": {
+      "material": "Cerâmica de Alta Qualidade",
+      "dimensoes": "20x20cm",
+      "cores": [
+        "Branca"
+      ],
+      "tamanhos": [
+        "20cm"
+      ]
+    },
+    "campanhas": [
+      "natal"
+    ]
+  },
+  {
+    "id": 2,
+    "nome": "Bolinha Acrílica de Natal Personalizada com Foto",
+    "descricao": "Celebre o espírito natalino com um toque especial! Nossa bolinha acrílica de Natal personalizada é o item perfeito para decorar sua árvore com elegância e personalidade. Confeccionada em material resistente e transparente, ela permite que a foto escolhida ganhe destaque, criando um efeito encantador.\r\n\r\nO interior conta com mini flocos decorativos, que dão um charme extra, enquanto o laço dourado brilhante no topo adiciona sofisticação à peça. Ideal para presentear familiares, amigos ou eternizar momentos especiais nesta época do ano.",
+    "categoria": "personalizados",
+    "preco": 9,
+    "imagem": "imagens/personalizados/imagem-1764260430332-309858224.jpg",
+    "estoque": 30,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/1d-efuSuP3aDRHBACY222oa-o7Lx43JfX?usp=sharing",
+    "especificacoes": {
+      "material": "Acrílico",
+      "dimensoes": "6.5x6.5cm",
+      "cores": [
+        "Transparente"
+      ],
+      "tamanhos": [
+        "6.5cm"
+      ]
+    },
+    "campanhas": [
+      "natal"
+    ]
+  },
+  {
+    "id": 3,
+    "nome": "Caneca de Porcelana Branca 325ml – Natal em Família",
+    "descricao": "Celebre a magia do Natal com muito amor e fé através da nossa Caneca de Porcelana Branca 325ml – Natal em Família. Com um design encantador, mensagem cristã inspiradora e espaço para inserir a foto da sua família, esta caneca transforma cada gole em um momento especial.\r\n\r\nFeita em porcelana de alta qualidade, possui brilho impecável, ótima durabilidade e impressão resistente, garantindo que as cores e detalhes permaneçam vivos por muito tempo. É o presente ideal para familiares, amigos ou para tornar sua própria ceia ainda mais memorável.",
+    "categoria": "sublimacao",
+    "preco": 38,
+    "imagem": "imagens/sublimacao/imagem-1764262408886-891189170.jpg",
+    "estoque": 8,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/1eoeLBRrRvjSI8Eh_x2fls5GuObwcOuye?usp=sharing",
+    "especificacoes": {
+      "material": "Porcelana",
+      "dimensoes": "11x9,5cm",
+      "cores": [
+        "Branca"
+      ],
+      "tamanhos": [
+        "Capacidade 325ml"
+      ]
+    },
+    "campanhas": [
+      "natal"
+    ]
+  },
+  {
+    "id": 4,
+    "nome": "Caneca Jateada de Vidro Fosco 475ml – Especial de Natal",
+    "descricao": "Brinde às festas de fim de ano com muito estilo usando nossa Caneca Jateada de Vidro Fosco 475ml – Especial de Natal. Com acabamento sofisticado e toque aveludado, essa caneca combina elegância e modernidade, perfeita para celebrar momentos especiais.\r\n\r\nO design apresenta a arte festiva do ano novo, com cores vibrantes e palavras que inspiram positividade — amor, felicidade, alegria e paz. Ideal para brindar entre amigos e familiares ou para presentear quem você ama com uma lembrança marcante.\r\n\r\nProduzida em vidro de alta qualidade, a caneca possui excelente durabilidade, transparência fosca charmosa e capacidade generosa para suas bebidas favoritas.",
+    "categoria": "sublimacao",
+    "preco": 50,
+    "imagem": "imagens/sublimacao/imagem-1764267487149-939161701.jpg",
+    "estoque": 2,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/129uRSopwPh2D_b8NHWDSSiVFSPMeokCK?usp=sharing",
+    "especificacoes": {
+      "material": "Vidro",
+      "dimensoes": "15x12.5cm",
+      "cores": [
+        "Fosca"
+      ],
+      "tamanhos": [
+        "Capacidade 475ml"
+      ]
+    },
+    "campanhas": [
+      "natal"
+    ]
+  },
+  {
+    "id": 5,
+    "nome": "Caneca de Polímero 325ml – Batizado / Madrinha",
+    "descricao": "Celebre um momento único com a nossa Caneca de Polímero 325ml – Batizado, criada especialmente para homenagear quem recebe a missão tão especial de ser madrinha. Com um design encantador em tons suaves e ilustrações fofas de bichinhos, esta caneca transmite carinho, ternura e significado.\n\nFeita em polímero de alta qualidade, é leve, resistente a quedas e possui excelente durabilidade – ideal para uso diário ou para guardar como lembrança. A impressão é vibrante, nítida e não desbota com facilidade, garantindo que o presente permaneça tão especial quanto o próprio momento do batizado.",
+    "categoria": "sublimacao",
+    "preco": 35,
+    "imagem": "imagens/sublimacao/imagem-1764272519532-327445183.png",
+    "estoque": 26,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/13HDUkQvoBArg5hNIJY2fc2zI_NNOihTK?usp=sharing",
+    "especificacoes": {
+      "material": "Polímero",
+      "dimensoes": "9.7x12cm",
+      "cores": [
+        "Branca com interior em três cores (Azul",
+        "Preto e Rosa)"
+      ],
+      "tamanhos": [
+        "Capacidade 325ml"
+      ]
+    },
+    "campanhas": [
+      "nascimento"
+    ]
+  },
+  {
+    "id": 6,
+    "nome": "Caneca de Alumínio 600ml – Feliz Ano Novo",
+    "descricao": "Brinde à chegada de um novo ciclo com a nossa Caneca de Alumínio 600ml, perfeita para celebrar momentos especiais com estilo e praticidade. Com acabamento metálico moderno e arte vibrante de “Feliz Ano Novo”, esta caneca é ideal para festas, encontros em família, confraternizações e comemorações em geral.\n\nFeita em alumínio de alta qualidade, é leve, resistente e mantém a bebida gelada por mais tempo — perfeita para quem gosta de aproveitar cada brinde com conforto. Seu design robusto e alça reforçada garantem segurança no uso, enquanto a capacidade generosa de 600ml oferece o tamanho ideal para bebidas variadas.",
+    "categoria": "sublimacao",
+    "preco": 35,
+    "imagem": "imagens/sublimacao/imagem-1764275432543-592115665.jpg",
+    "estoque": 1,
+    "emPromocao": false,
+    "linkMockups": "https://drive.google.com/drive/folders/1kVoeJeC0jfYqJBUTjAHz966T-n9xSwf5?usp=sharing",
+    "especificacoes": {
+      "material": "Alumínio",
+      "dimensoes": "11.7x8cm",
+      "cores": [
+        "Prata"
+      ],
+      "tamanhos": [
+        "Capacidade 600ml"
+      ]
+    },
+    "campanhas": [
+      "ano-novo",
+      "dia-do-amigo"
+    ]
+  },
+  {
+    "id": 7,
+    "nome": "Squeeze de Alumínio 600ml – Educador(a)",
+    "descricao": "Leve mais inspiração e praticidade para o dia a dia com nosso Squeeze de Alumínio 600ml, perfeito para professores(as) e profissionais da educação que fazem a diferença com dedicação, sabedoria e paciência. Com design moderno em acabamento metálico e arte exclusiva, este squeeze traz uma mensagem especial que valoriza a nobre missão de educar.\n\nFabricado em alumínio resistente, é leve, durável e ideal para uso escolar, no trabalho, em atividades físicas ou na rotina diária. A tampa com bico dosador e proteção facilita o consumo da bebida e evita vazamentos, garantindo praticidade em qualquer ocasião. Além disso, pode ser personalizado com nome, tornando o presente ainda mais único e especial.",
+    "categoria": "sublimacao",
+    "preco": 35,
+    "imagem": "imagens/sublimacao/imagem-1764280116437-596871777.jpg",
+    "estoque": 1,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/1tsbq78kyXX54xc_AfufYLVpIyIAwv4-3?usp=sharing",
+    "especificacoes": {
+      "material": "Alumínio",
+      "dimensoes": "21x7.3cm",
+      "cores": [
+        "Prata"
+      ],
+      "tamanhos": [
+        "Capacidade 600ml"
+      ]
+    },
+    "campanhas": [
+      "dia-dos-professores"
+    ]
+  },
+  {
+    "id": 8,
+    "nome": "Relógio de MDF 20x20cm – Natal em Família",
+    "descricao": "Transforme momentos especiais em uma peça decorativa cheia de encanto com o Relógio de MDF 20x20cm – Natal em Família. Perfeito para presentear ou decorar seu lar nesta época tão especial, ele une funcionalidade e emoção em um só produto.\r\n\r\nCom design natalino vibrante, mensagem cristã inspiradora e espaço para fotos personalizadas, este relógio cria uma lembrança única que aquece o coração. Fabricado em MDF de alta qualidade, possui acabamento impecável, impressão nítida e ponteiros precisos que garantem excelente funcionamento.\r\n\r\nIdeal para salas, quartos, escritórios ou cantinhos decorativos, ele se destaca como um item afetivo e cheio de significado.",
+    "categoria": "sublimacao",
+    "preco": 40,
+    "imagem": "imagens/sublimacao/imagem-1764291252580-73657723.png",
+    "estoque": 6,
+    "emPromocao": false,
+    "linkMockups": "https://drive.google.com/drive/folders/1bXu3UFh66Ivx4cYDiSdrF3bX07OwryTG?usp=sharing",
+    "especificacoes": {
+      "material": "MDF",
+      "dimensoes": "20x20cm",
+      "cores": [
+        "Branco"
+      ],
+      "tamanhos": [
+        "20cm"
+      ]
+    },
+    "campanhas": [
+      "natal",
+      "dia-do-amigo"
+    ]
+  },
+  {
+    "id": 9,
+    "nome": "Plaquinha de MDF – Tamanho A4 (Natal em Família)",
+    "descricao": "Leve o espírito natalino para sua decoração com a Plaquinha de MDF Tamanho A4 – Natal em Família, uma peça encantadora que transforma suas fotos em verdadeiras memórias afetivas. Com design vibrante, detalhes festivos e acabamento de alta qualidade, ela é perfeita para enfeitar ambientes ou presentear pessoas especiais.\r\n\r\nProduzida em MDF resistente, a plaquinha possui impressão em alta definição, garantindo cores intensas e excelente durabilidade. O layout natalino, com elementos como laços, presentes, folhagens e brilho, destaca sua foto e cria uma atmosfera acolhedora e cheia de alegria.\r\n\r\nIdeal para decorar salas, quartos, áreas festivas, escritórios ou cantinhos temáticos de Natal.",
+    "categoria": "sublimacao",
+    "preco": 30,
+    "imagem": "imagens/sublimacao/imagem-1764293906165-923939639.jpg",
+    "estoque": 1,
+    "emPromocao": false,
+    "linkMockups": "https://drive.google.com/drive/folders/180jnf60PKNtNZTHkIeSEICOG0UnagFB1?usp=sharing",
+    "especificacoes": {
+      "material": "MDF",
+      "dimensoes": "27x19cm",
+      "cores": [
+        "Branco"
+      ],
+      "tamanhos": [
+        "A4"
+      ]
+    },
+    "campanhas": [
+      "natal"
+    ]
+  },
+  {
+    "id": 10,
+    "nome": "Agenda Jurídica 2026 – Capa em MDF de Alta Qualidade e Alto Brilho",
+    "descricao": "Organize seu ano com estilo, praticidade e sofisticação com a Agenda Jurídica 2026, desenvolvida especialmente para profissionais do Direito que valorizam funcionalidade e uma apresentação impecável.\n\nCom capa em MDF de alta qualidade e acabamento em alto brilho, esta agenda se destaca pela durabilidade e pelo visual refinado. As artes florais delicadas, disponíveis em diferentes cores, trazem um toque de elegância moderna, enquanto o símbolo da balança jurídica reforça sua identidade profissional.\n\nIdeal para advogados, estudantes de Direito, estagiários, servidores públicos e todos que precisam de uma agenda completa e organizada para o dia a dia.",
+    "categoria": "sublimacao",
+    "preco": 65,
+    "imagem": "imagens/sublimacao/imagem-1764334987527-734119112.png",
+    "estoque": 1,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/1r6zQ7g76X6uDSbghjb-AGcnQYzXWxSy5?usp=sharing",
+    "especificacoes": {
+      "material": "MDF",
+      "dimensoes": "21x14.5cm",
+      "cores": [
+        "Variadas (Depende da Estampa Escolhida)"
+      ],
+      "tamanhos": [
+        "21cm"
+      ]
+    },
+    "campanhas": [
+      "professoes"
+    ]
+  },
+  {
+    "id": 11,
+    "nome": "Chaveiro Acrílico 3x4 cm – Natal Personalizado",
+    "descricao": "Leve o espírito natalino para o seu dia a dia com o Chaveiro Acrílico 3x4 cm, uma lembrancinha encantadora, leve e totalmente personalizável. Com acabamento transparente de alta qualidade, ele permite inserir foto de um lado e arte temática do outro, criando um presente especial e cheio de significado.\r\n\r\nPerfeito para lembrancinhas de Natal, brindes, presentes para familiares, clientes, alunos ou amigos. Seu formato compacto e resistente o torna ideal para acompanhar chaves, bolsas, mochilas e acessórios.",
+    "categoria": "personalizados",
+    "preco": 5,
+    "imagem": "imagens/personalizados/imagem-1764345907290-364177345.jpg",
+    "estoque": 30,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/1GM-qer0t4XB_YPlmoHbH8M4NAIaBIiuf?usp=sharing",
+    "especificacoes": {
+      "material": "Acrílico",
+      "dimensoes": "3x4cm",
+      "cores": [
+        "Padrão Transparente"
+      ],
+      "tamanhos": [
+        "4cm"
+      ]
+    },
+    "campanhas": [
+      "natal"
+    ]
+  },
+  {
+    "id": 12,
+    "nome": "Plaquinha Acrílica para Chave PIX – Elegante e Profissional",
+    "descricao": "Facilite seus recebimentos e transmita mais profissionalismo com a Plaquinha Acrílica para Chave PIX, ideal para estabelecimentos comerciais, consultórios, escritórios, salões de beleza, eventos e autônomos.\n\nFabricada em acrílico cristal de alta qualidade, a plaquinha oferece excelente visibilidade e um acabamento moderno que combina com qualquer ambiente. A arte é impressa em alta definição, garantindo cores vivas, nitidez e leitura clara das informações.\n\nPerfeita para exibir sua chave PIX (CPF, e-mail, telefone ou chave aleatória) de forma organizada, prática e elegante.",
+    "categoria": "personalizados",
+    "preco": 18,
+    "imagem": "imagens/personalizados/imagem-1764349850052-119188424.png",
+    "estoque": 3,
+    "emPromocao": false,
+    "linkMockups": "https://drive.google.com/drive/folders/1BRLa4qoy7tefmS5TMAhY-4-61dmKrbsn?usp=sharing",
+    "especificacoes": {
+      "material": "Acrílico",
+      "dimensoes": "15x10cm",
+      "cores": [
+        "Padrão Transparente"
+      ],
+      "tamanhos": [
+        "15cm"
+      ]
+    },
+    "campanhas": [
+      "modernizacao-praticidade"
+    ]
+  },
+  {
+    "id": 13,
+    "nome": "Calendário Triangular de Mesa 2026 – Personalizado",
+    "descricao": "Organize seu ano com praticidade e dê um toque profissional ao seu ambiente com o Calendário Triangular de Mesa 2026. Ideal para escritórios, comércios, escolas, consultórios e uso pessoal, ele oferece visual moderno, excelente acabamento e espaço para personalização com sua logo, fotos ou artes exclusivas.\n\nCom formato triangular, é estável, elegante e ocupa pouco espaço na mesa. A impressão em alta definição garante ótima leitura e cores vibrantes, tornando seu calendário não apenas útil, mas também um item decorativo funcional.",
+    "categoria": "personalizados",
+    "preco": 12,
+    "imagem": "imagens/personalizados/imagem-1764350342406-812349862.png",
+    "estoque": 100,
+    "emPromocao": true,
+    "linkMockups": "https://drive.google.com/drive/folders/1VcRuw6APpBgakrEN0IZu9XfJ7krjMamE?usp=sharing",
+    "especificacoes": {
+      "material": "Papel Offset 180g",
+      "dimensoes": "10x10x7x20cm",
+      "cores": [
+        "Variadas (Depende da Estampa Escolhida)"
+      ],
+      "tamanhos": [
+        "27cm"
+      ]
+    },
+    "campanhas": [
+      "volta-as-aulas"
+    ]
+  },
+  {
+    "id": 14,
+    "nome": "Chaveiro Redondo em MDF – Personalizado",
+    "descricao": "Guarde suas melhores memórias sempre por perto com o Chaveiro Redondo em MDF Personalizado, uma lembrancinha perfeita para presentear e eternizar momentos especiais. Produzido em MDF de alta qualidade, ele oferece excelente durabilidade, acabamento liso e impressão em alta definição, garantindo cores vivas e detalhes nítidos.\n\nCom formato redondo e design moderno, é ideal para personalizar com fotos, mensagens, artes comemorativas ou temas especiais como Natal, aniversários e datas marcantes. Leve e resistente, acompanha corrente metálica reforçada, perfeito para usar em chaves, mochilas, bolsas ou como mimo especial para clientes.",
+    "categoria": "sublimacao",
+    "preco": 5,
+    "imagem": "imagens/sublimacao/imagem-1764356160076-956516045.png",
+    "estoque": 20,
+    "emPromocao": false,
+    "linkMockups": "https://drive.google.com/drive/folders/1jermcuSZXoOr3PGQhSnaATj8hDGD-q_t?usp=sharing",
+    "especificacoes": {
+      "material": "MDF",
+      "dimensoes": "6x6cm",
+      "cores": [
+        "Variadas (Depende da Estampa Escolhida)"
+      ],
+      "tamanhos": [
+        "6cm"
+      ]
+    },
+    "campanhas": [
+      "natal"
+    ]
+  },
+  {
+    "id": 15,
+    "nome": "Convite Digital Infantil – Personalizado",
+    "descricao": "Transforme o início da festa em um momento ainda mais especial com o Convite Digital Infantil Personalizado! Criado com muito carinho e cheio de cores, personagens e temas divertidos, ele é perfeito para aniversários, chás, batizados e qualquer celebração infantil.\n\nProduzido em formato digital, o convite é rápido, prático e econômico, podendo ser enviado facilmente pelo WhatsApp, Instagram, e-mail ou qualquer rede social. Totalmente personalizável, você escolhe o tema, nome da criança, data, local, idade e demais informações — tudo com um design criativo que encanta convidados de todas as idades.\n\n✨ Destaques do produto:\n\nArquivo digital pronto para envio\n\nPersonalização completa (nome, idade, data, horário, local etc.)\n\nDesign infantil exclusivo e temático\n\nIdeal para convites digitais via WhatsApp e redes sociais\n\nRápido, prático e econômico\n\nAlta qualidade visual\n\nUma forma moderna, divertida e cheia de estilo de convidar quem você ama para momentos inesquecíveis!",
+    "categoria": "convites_digitais",
+    "preco": 8,
+    "imagem": "imagens/convites_digitais/imagem-1764358432398-672420334.png",
+    "estoque": 0,
+    "emPromocao": false,
+    "linkMockups": "https://drive.google.com/drive/folders/13I_hq8zmX25LPs_RC3BeEir8MUSUP7eq?usp=sharing",
+    "especificacoes": {
+      "material": "Arquivo Digital",
+      "dimensoes": "1080x1920px",
+      "cores": [
+        "Variadas (Depende da Estampa Escolhida)"
+      ],
+      "tamanhos": [
+        "1080x1920px"
+      ]
+    },
+    "campanhas": [
+      "aniversario"
+    ]
+  },
+  {
+    "id": 16,
+    "nome": "Caneca de Porcelana 325ml – Dia das Mães",
+    "descricao": "Demonstre todo o carinho e gratidão por quem sempre esteve ao seu lado com a Caneca de Porcelana 325ml – Dia das Mães. Com um design cheio de amor, delicadeza e detalhes que emocionam, esta caneca é o presente perfeito para celebrar a força, a ternura e a beleza de ser mãe.\r\n\r\nFabricada em porcelana de alta qualidade, possui brilho impecável, acabamento perfeito e impressão resistente, garantindo cores vivas e durabilidade. A mensagem carinhosa acompanhada da possibilidade de personalizar com foto torna o presente ainda mais especial, único e cheio de significado.",
+    "categoria": "sublimacao",
+    "preco": 38,
+    "imagem": "imagens/sublimacao/imagem-1764436791585-27044973.jpg",
+    "estoque": 8,
+    "emPromocao": false,
+    "linkMockups": "https://drive.google.com/drive/folders/1lno54sG5oTN9Qm5n4576V2zFI1VtqiSz?usp=sharing",
+    "especificacoes": {
+      "material": "Porcelana",
+      "dimensoes": "11x9.5cm",
+      "cores": [
+        "Branca"
+      ],
+      "tamanhos": [
+        "Capacidade 325ml"
+      ]
+    },
+    "campanhas": [
+      "dia-das-maes"
+    ]
+  }
+]

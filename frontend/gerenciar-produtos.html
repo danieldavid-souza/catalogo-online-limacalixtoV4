@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Produtos - Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Painel Administrativo</h1>
+        <nav class="header-nav">
+            <a href="index.html">Ver Vitrine</a> | 
+            <a href="admin.html">Menu Principal</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Formulário para Adicionar/Editar Produtos -->
+        <div class="form-container">
+            <h2 id="form-title">Adicionar Novo Produto</h2>
+            <form id="product-form">
+                <!-- Campo oculto para armazenar o ID do produto em edição -->
+                <input type="hidden" id="product-id">
+
+                <div class="form-group">
+                    <label for="name">Nome do Produto</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Descrição</label>
+                    <textarea id="description" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Preço (ex: 29.99)</label>
+                    <input type="number" id="price" name="price" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="category">Categoria</label>
+                    <input type="text" id="category" name="category">
+                </div>
+                <div class="form-group">
+                    <label for="google_drive_link">Link do Google Drive (Mockups)</label>
+                    <input type="url" id="google_drive_link" name="google_drive_link">
+                </div>
+                <div class="form-group">
+                    <label for="image_url">URL da Imagem do Produto</label>
+                    <input type="url" id="image_url" name="image_url">
+                </div>
+                <div class="form-group form-group-checkbox">
+                    <input type="checkbox" id="on_sale" name="on_sale">
+                    <label for="on_sale">Marcar como "Em Oferta"</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar Produto</button>
+                <button type="button" id="cancel-edit" class="btn btn-secondary" style="display: none;">Cancelar Edição</button>
+            </form>
+        </div>
+
+        <div class="list-header">
+            <h2>Produtos Cadastrados</h2>
+            <div class="filter-group-admin">
+                <label for="campaign-filter">Filtrar por Campanha:</label>
+                <select id="campaign-filter">
+                    <!-- Opções de campanha carregadas via JS -->
+                </select>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <!-- Tabela para Listar Produtos -->
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Status</th>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="product-list">
+                    <!-- Os produtos serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="js/gerenciar-produtos.js"></script>
+</body>
+</html>

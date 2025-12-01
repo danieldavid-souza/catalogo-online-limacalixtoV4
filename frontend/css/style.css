@@ -1,0 +1,671 @@
+/* Animação para o aparecimento suave dos cards */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+* {
+    box-sizing: border-box; /* Garante que padding e borda não aumentem o tamanho total do elemento. */
+}
+
+/* Estilos Gerais */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #121212; /* Fundo principal escuro */
+    color: #E0E0E0; /* Cor de texto principal */
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #1E1E1E; /* Tom sobre tom */
+    border-bottom: 1px solid #2d2d2d;
+    color: #ecf0f1;
+    padding: 0.75rem 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Distribui os itens */
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.header-logo {
+    height: 50px;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-align: center; /* Garante que o texto dentro do h1 esteja centralizado */
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+}
+
+.search-container {
+    position: relative;
+}
+
+
+/* Estilo profissional para o campo de busca no cabeçalho */
+#searchInput {
+    background-color: #333;
+    border: 1px solid #424242;
+    border-radius: 20px; /* Bordas arredondadas */
+    color: #E0E0E0;
+    padding: 0.5rem 1rem;
+    padding-right: 40px; /* Espaço para o ícone */
+    font-size: 0.9rem;
+    width: 250px; /* Largura padrão */
+    transition: all 0.3s ease-in-out;
+    outline: none; /* Remove a borda padrão do navegador no foco */
+}
+
+/* Efeito de foco */
+#searchInput:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    width: 300px; /* Expande suavemente no foco */
+}
+
+.search-container .fa-search {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #757575; /* Cor do ícone um pouco mais sutil */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    /* Removemos o estilo do container principal para aplicar no grid */
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.main-content {
+    /* Este será o container principal para as páginas de admin */
+    background-color: #1E1E1E;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+
+h1, h2 {
+    color: #ffffff;
+}
+
+/* Navegação do Admin */
+.admin-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.nav-button {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: #2980b9;
+}
+
+.nav-button.disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+/* Formulários */
+.form-container {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #2d2d2d;
+    border-radius: 5px;
+    background-color: #242424;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #424242;
+    border-radius: 4px;
+    box-sizing: border-box; /* Garante que padding não afete a largura total */
+    background-color: #333;
+    color: #E0E0E0;
+}
+
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: opacity 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Tabela de Produtos */
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* margin-top removido para ser controlado pelo wrapper */
+}
+
+.product-table th, .product-table td {
+    border: 1px solid #2d2d2d;
+    padding: 0.8rem;
+    text-align: left;
+}
+
+.product-table th {
+    background-color: #242424;
+    color: #ffffff;
+}
+
+.sale-tag-table {
+    background-color: #28a745;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.filter-group-admin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-group-admin select {
+    background-color: #333;
+    color: #E0E0E0;
+    border: 1px solid #424242;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: #212529;
+    margin-right: 5px;
+}
+
+.campaign-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}
+
+.campaign-table th, .campaign-table td {
+    border: 1px solid #2d2d2d;
+    padding: 0.8rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* --- ESTILOS DA VITRINE (INDEX.HTML) --- */
+
+/* Campanhas */
+.campaigns-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.campaign-item {
+    flex: 0 0 300px; /* Não encolhe, não cresce, base de 300px */
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #242424;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.campaigns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.campaign-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.campaign-item h3, .campaign-item p {
+    padding: 0 1rem 1rem 1rem;
+    margin: 0.5rem 0;
+}
+
+/* Barra Lateral de Filtros */
+.filters {
+    background-color: #242424;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #2d2d2d;
+}
+
+.filter-group {
+    margin-bottom: 1.5rem;
+}
+
+.filter-group h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #424242;
+    padding-bottom: 0.5rem;
+}
+
+#categoryFilters label {
+    display: block;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+}
+
+#sortOptions {
+    padding: 0.8rem;
+    border: 1px solid #424242;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #333;
+    color: #E0E0E0;
+    width: 100%;
+}
+
+/* Estilo do Switch de Promoção */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.switch input { display: none; }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #424242;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; width: 20px;
+    left: 4px; bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+input:checked + .slider { background-color: #28a745; }
+input:checked + .slider:before { transform: translateX(22px); }
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+.campaigns-button {
+    width: 100%;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+.campaigns-button:hover {
+    background-color: #2980b9;
+}
+
+.campaigns-button .fas {
+    margin-right: 8px;
+}
+
+/* Grid de Produtos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.product-card {
+    background: #242424;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    position: relative; /* Necessário para a etiqueta de oferta */
+    overflow: hidden; /* Garante que a etiqueta não vaze */
+}
+
+.sale-tag {
+    position: absolute;
+    top: 10px;
+    left: -30px;
+    background-color: #28a745;
+    color: white;
+    padding: 5px 30px;
+    transform: rotate(-45deg);
+    font-weight: bold;
+}
+
+.product-card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.product-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.product-card .category {
+    font-size: 0.9rem;
+    color: #9E9E9E;
+}
+
+.product-card .price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #3498db;
+    margin: 1rem 0;
+}
+
+.card-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+/* Estilos do Modal */
+.modal {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #242424;
+    margin: auto;
+    padding: 2rem;
+    border: 1px solid #424242;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.campaigns-modal-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.close-button {
+    color: #9E9E9E;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.whatsapp-icon {
+    width: 20px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.table-img-preview {
+    width: 120px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Botão Voltar ao Topo */
+#backToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+}
+
+#backToTopBtn:hover {
+    background-color: #2980b9;
+}
+
+/* Rodapé */
+.site-footer {
+    background-color: #1E1E1E;
+    color: #9E9E9E;
+    padding: 2rem 0 0;
+    margin-top: 3rem;
+    border-top: 1px solid #2d2d2d;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+}
+
+.footer-logo {
+    max-width: 100px;
+    margin-bottom: 1rem;
+}
+
+.footer-column p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.footer-column h3 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.footer-column ul {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li a {
+    color: #9E9E9E;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-column ul li a:hover {
+    color: #3498db;
+}
+
+/* Estilo profissional para os botões de redes sociais */
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 0 5px;
+    border-radius: 50%;
+    background-color: #333;
+    color: #ffffff;
+    font-size: 1rem; /* Ajusta o tamanho do ícone */
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background-color: #3498db; /* Cor de destaque no hover */
+    transform: translateY(-3px); /* Efeito de elevação */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid #2d2d2d;
+}
+
+/* --- REGRAS DE RESPONSIVIDADE --- */
+
+/* Telas Médias (Tablets) - até 992px */
+@media (max-width: 992px) {
+    .container {
+        grid-template-columns: 1fr; /* Coloca os filtros em cima */
+    }
+
+    .header-container {
+        padding: 0 1rem; /* Adiciona espaçamento lateral no cabeçalho */
+    }
+
+    #searchInput:focus {
+        width: 280px; /* Reduz a expansão da busca */
+    }
+}
+
+/* Telas Pequenas (Celulares) - até 768px */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #searchInput, #searchInput:focus {
+        width: 100%; /* Busca ocupa a largura total */
+        box-sizing: border-box;
+    }
+
+    .product-grid {
+        /* Muda para 2 colunas em telas um pouco menores */
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .modal-content {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr; /* Colunas do rodapé empilhadas */
+        text-align: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+
+    /* Responsividade para tabelas de administração */
+    .table-wrapper {
+        overflow-x: auto; /* Permite rolagem horizontal */
+    }
+}
+
+/* Telas Muito Pequenas - até 480px */
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: 1fr; /* Força uma única coluna */
+    }
+}

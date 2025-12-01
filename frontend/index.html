@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Lima Calixto</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container header-container">
+            <a href="/" class="logo-container" aria-label="Página Inicial">
+                <img src="imagens/logo/logo-lima-calixto.png" alt="Logo Lima Calixto" class="header-logo">
+            </a>
+            <h1 class="header-title">Catálogo Lima Calixto  Personalizados</h1>
+            <div class="header-controls">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Buscar produtos...">
+                    <i class="fa fa-search"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <aside class="filters">
+            <h2>Filtros</h2>
+            <div class="filter-group">
+                <h3>Categoria</h3>
+                <div id="categoryFilters">
+                    <!-- Gerado via JS -->
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>Ordenar por</h3>
+                <select id="sortOptions" aria-label="Opções de ordenação">
+                    <option value="default">Padrão</option>
+                    <option value="price-asc">Menor Preço</option>
+                    <option value="price-desc">Maior Preço</option>
+                    <option value="name-asc">Nome (A-Z)</option>
+                    <option value="name-desc">Nome (Z-A)</option>
+                </select>
+            </div>
+             <div class="filter-group">
+                <h3>Promoções</h3>
+                <label class="switch">
+                    <input type="checkbox" id="promoFilter">
+                    <span class="slider round"></span>
+                </label>
+                <span>Apenas em promoção</span>
+            </div>
+            <div class="filter-group">
+                <button id="campaignsBtn" class="campaigns-button">
+                    <i class="fas fa-star"></i> Ver Campanhas
+                </button>
+            </div>
+        </aside>
+
+        <section id="product-grid" class="product-grid">
+            <!-- Cards de produtos inseridos via JS -->
+        </section>
+    </main>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" aria-label="Fechar modal">&times;</span>
+            <div id="modalBody">
+                <!-- Conteúdo do modal inserido via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal para Campanhas -->
+    <div id="campaignsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" aria-label="Fechar modal">&times;</span>
+            <h2>Nossas Campanhas</h2>
+            <div id="campaignsModalBody" class="campaigns-modal-body"></div>
+        </div>
+    </div>
+
+    <button id="backToTopBtn" title="Voltar ao topo"><i class="fas fa-arrow-up"></i></button>
+
+    <footer class="site-footer">
+        <div class="footer-container container">
+            <div class="footer-column about">
+                <img src="imagens/logo/logo-lima-calixto.png" alt="Logo Lima Calixto" class="footer-logo">
+                <h3>Lima Calixto Personalizados</h3>
+                <p>Criando memórias e presentes únicos com a sua cara. Qualidade e carinho em cada detalhe.</p>
+            </div>
+            <div class="footer-column links">
+                <h3>Navegação</h3>
+                <ul>
+                    <li><a href="#">Início</a></li>
+                    <li><a href="#product-grid">Produtos</a></li>
+                    <li><a href="#categoryFilters">Categorias</a></li>
+                </ul>
+            </div>
+            <div class="footer-column links">
+                <h3>Campanhas</h3>
+                <p>Descubra nossas coleções especiais clicando no botão "Ver Campanhas" no menu de filtros.</p>
+            </div>
+            <div class="footer-column social">
+                <h3>Siga-nos nas Redes Sociais</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/Limacalixtopersonalizados" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/limacalixtopersonalizados/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Lima Calixto Personalizados. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Importante: mudar o tipo para "module" para usar import/export -->
+    <script src="js/script.js"></script>
+</body>
+</html>
