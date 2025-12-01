@@ -1,6 +1,6 @@
 // Variáveis globais
 // const apiBaseUrl = 'http://localhost:3000/api';  Para uso local
-const apiBaseUrl = 'https://seu-backend-url.onrender.com/api'; // <-- VAMOS MUDAR ISSO
+const apiBaseUrl = 'https://catalogo-limacalixto-api.onrender.com/api'; // URL do seu backend no Render
 let allProducts = [];
 
 // Elementos do DOM

@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // const productsApiUrl = 'http://localhost:3000/api/products'; Para uso local
     // const campaignsApiUrl = 'http://localhost:3000/api/campaigns'; Para uso local
-    const productsApiUrl = 'https://seu-backend-url.onrender.com/api/products'; // <-- VAMOS MUDAR ISSO
-    const campaignsApiUrl = 'https://seu-backend-url.onrender.com/api/campaigns'; // <-- VAMOS MUDAR ISSO
+    const productsApiUrl = 'https://catalogo-limacalixto-api.onrender.com/api/products'; // URL do seu backend no Render
+    const campaignsApiUrl = 'https://catalogo-limacalixto-api.onrender.com/api/campaigns'; // URL do seu backend no Render
 
     const productForm = document.getElementById('product-form');
     const productList = document.getElementById('product-list');
