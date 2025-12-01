@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: isEditing ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${token}` // Descomente esta linha se tiver implementado autenticação
                 },
                 body: JSON.stringify(productData),
             });
@@ -177,7 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = target.dataset.id;
             if (confirm('Tem certeza que deseja excluir este produto?')) {
                 try {
-                    const response = await fetch(`${productsApiUrl}/${id}`, { method: 'DELETE' });
+                    const response = await fetch(`${productsApiUrl}/${id}`, { 
+                        method: 'DELETE',
+                        // headers: { 'Authorization': `Bearer ${token}` } // Descomente esta linha se tiver implementado autenticação
+                    });
                     if (!response.ok) throw new Error('Erro ao excluir');
                     alert('Produto excluído com sucesso!');
                     fetchAllData(); // Atualiza a lista
