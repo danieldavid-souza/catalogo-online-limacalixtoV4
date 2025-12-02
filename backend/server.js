@@ -1,6 +1,9 @@
 // backend/server.js
 
-require('dotenv').config(); // Carrega as variáveis de ambiente do arquivo .env
+// Carrega variáveis de ambiente apenas se não estiver em produção
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 const express = require('express');
 const Database = require('better-sqlite3'); // Substitui o sqlite3
 const cors = require('cors');

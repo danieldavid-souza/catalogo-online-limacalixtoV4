@@ -1,6 +1,9 @@
 // backend/seed-pinecone.js
 
-require('dotenv').config();
+// Carrega variáveis de ambiente apenas se não estiver em produção
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 const { Pinecone } = require('@pinecone-database/pinecone');
 const { HfInference } = require('@huggingface/inference');
 const Database = require('better-sqlite3'); // Substitui o sqlite3
