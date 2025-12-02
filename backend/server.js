@@ -3,6 +3,16 @@
 // Em produção (Render), as variáveis são injetadas diretamente.
 // Para desenvolvimento local, inicie com: node -r dotenv/config server.js
 const express = require('express');
+
+// --- VERIFICAÇÃO DE VARIÁVEIS DE AMBIENTE ---
+const requiredEnvVars = ['PINECONE_API_KEY', 'HUGGINGFACE_TOKEN'];
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0) {
+  console.error(`ERRO: As seguintes variáveis de ambiente são obrigatórias: ${missingVars.join(', ')}`);
+  process.exit(1); // Encerra o processo com um código de erro
+}
+
 const Database = require('better-sqlite3'); // Substitui o sqlite3
 const cors = require('cors');
 
@@ -10,7 +20,7 @@ const cors = require('cors');
 const { Pinecone } = require('@pinecone-database/pinecone');
 const { HfInference } = require('@huggingface/inference');
 
-const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+const pinecone = new Pinecone(); // A API Key é lida automaticamente de process.env.PINECONE_API_KEY
 const hf = new HfInference(process.env.HUGGINGFACE_TOKEN);
 const pineconeIndex = pinecone.index('catalog-products'); // Mesmo nome do índice do seed
 const embeddingModel = 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2';
