@@ -33,58 +33,54 @@ async function fetchAllProducts() {
 }
 
 /**
- * Renderiza os produtos na tela com base nos filtros e ordenação.
+ * Renderiza os produtos na tela. Pode receber uma lista de produtos para exibir.
+ * Se nenhuma lista for fornecida, usa a lista completa (allProducts).
  */
-function renderProducts() {
+function renderProducts(productsToRender = null) {
     if (!productGrid) return;
     productGrid.innerHTML = ''; // Limpa o grid antes de renderizar
 
-    let filteredProducts = [...allProducts];
+    let products = productsToRender ? productsToRender : [...allProducts];
 
-    // 1. Filtrar por busca
-    const searchTerm = searchInput.value.toLowerCase();
-    if (searchTerm) {
-        filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(searchTerm));
+    // Se uma busca não foi feita, aplicamos os filtros locais
+    if (!productsToRender) {
+        // Filtrar por categoria
+        const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+            .map(cb => cb.value)
+            .filter(Boolean);
+        if (selectedCategories.length > 0) {
+            products = products.filter(p => selectedCategories.includes(p.category));
+        }
+
+        // Filtrar por promoção
+        if (promoFilter.checked) {
+            products = products.filter(p => p.on_sale === 1);
+        }
+
+        // Ordenar
+        const sortValue = sortOptions.value;
+        switch (sortValue) {
+            case 'price-asc':
+                products.sort((a, b) => a.price - b.price);
+                break;
+            case 'price-desc':
+                products.sort((a, b) => b.price - a.price);
+                break;
+            case 'name-asc':
+                products.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'name-desc':
+                products.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+        }
     }
 
-    // 2. Filtrar por categoria
-    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
-                                    .map(cb => cb.value)
-                                    .filter(Boolean); // Remove valores vazios
-    if (selectedCategories.length > 0) {
-        filteredProducts = filteredProducts.filter(p => selectedCategories.includes(p.category));
-    }
-
-    // 3. Filtrar por promoção
-    if (promoFilter.checked) {
-        filteredProducts = filteredProducts.filter(p => p.on_sale === 1);
-    }
-
-    // 4. Ordenar
-    const sortValue = sortOptions.value;
-    switch (sortValue) {
-        case 'price-asc':
-            filteredProducts.sort((a, b) => a.price - b.price);
-            break;
-        case 'price-desc':
-            filteredProducts.sort((a, b) => b.price - a.price);
-            break;
-        case 'name-asc':
-            filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-            break;
-        case 'name-desc':
-            filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
-            break;
-    }
-
-    // 5. Renderizar no DOM
-    productGrid.innerHTML = '';
-    if (filteredProducts.length === 0) {
+    if (products.length === 0) {
         productGrid.innerHTML = '<p>Nenhum produto encontrado com os critérios selecionados.</p>';
         return;
     }
 
-    filteredProducts.forEach(product => {
+    products.forEach(product => {
             const card = document.createElement('div');
             card.className = 'product-card';
             card.dataset.id = product.id;
@@ -199,14 +195,41 @@ backToTopBtn.addEventListener('click', () => {
 });
 
 /**
+ * Função para lidar com a busca, agora usando a API de IA.
+ */
+async function handleSearch() {
+    const searchTerm = searchInput.value.trim();
+
+    // Se a busca estiver vazia, renderiza todos os produtos com os filtros locais
+    if (!searchTerm) {
+        renderProducts();
+        return;
+    }
+
+    productGrid.innerHTML = '<p>Buscando com Inteligência Artificial...</p>';
+
+    try {
+        const response = await fetch(`${apiBaseUrl}/products/ai-search?query=${encodeURIComponent(searchTerm)}`);
+        if (!response.ok) {
+            throw new Error('A resposta da busca por IA não foi bem-sucedida.');
+        }
+        const { data } = await response.json();
+        // Renderiza apenas os produtos retornados pela busca por IA
+        renderProducts(data);
+    } catch (error) {
+        console.error('Erro na busca por IA:', error);
+        productGrid.innerHTML = '<p>Ocorreu um erro ao realizar a busca. Tente novamente.</p>';
+    }
+}
+
+/**
  * Inicialização e Event Listeners.
  */
 function init() {
     // Carrega os produtos
     fetchAllProducts();
-
-    // Listeners dos filtros
-    searchInput.addEventListener('input', renderProducts);
+    
+    // Listeners dos filtros e ordenação (exceto a busca)
     sortOptions.addEventListener('change', renderProducts);
     promoFilter.addEventListener('change', renderProducts);
 
@@ -227,6 +250,12 @@ function init() {
             campaignsModal.style.display = 'none';
         }
     });
+
+    // Novo listener para a busca
+    // Usamos 'change' para buscar quando o usuário pressiona Enter ou clica fora do campo
+    searchInput.addEventListener('change', handleSearch);
+    // Adicionamos um listener para o evento de limpar a busca (ícone 'x' no campo de busca)
+    searchInput.addEventListener('search', () => !searchInput.value && handleSearch());
 }
 
 document.addEventListener('DOMContentLoaded', init);
