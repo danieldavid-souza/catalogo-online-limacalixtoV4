@@ -8,6 +8,7 @@
   "start:prod": "node seed-pinecone.js && node server.js",
   "seed:local": "node seed.js",
   "seed:pinecone": "node seed-pinecone.js",
+  "clean-install": "rm -rf node_modules package-lock.json && npm install",
   "test": "echo \"Error: no test specified\" && exit 1"
 },
   "keywords": [],
