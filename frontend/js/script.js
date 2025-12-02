@@ -40,39 +40,39 @@ function renderProducts(productsToRender = null) {
     let products = productsToRender;
     // Se a busca por IA retornou resultados, usamos eles.
     // Se não, aplicamos os filtros locais na lista completa.
-    if (productsToRender === null) {
+    if (products === null) {
         products = [...allProducts];
 
-    // Se uma busca não foi feita, aplicamos os filtros locais
-    if (!productsToRender) {
         // Filtrar por categoria
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
             .map(cb => cb.value)
             .filter(Boolean);
         if (selectedCategories.length > 0) {
-            products = products.filter(p => selectedCategories.includes(p.category));
+            products = products.filter(p => p.category && selectedCategories.includes(p.category));
         }
 
         // Filtrar por promoção
-        if (promoFilter.checked) {
+        if (promoFilter && promoFilter.checked) {
             products = products.filter(p => p.on_sale === 1);
         }
 
         // Ordenar
-        const sortValue = sortOptions.value;
-        switch (sortValue) {
-            case 'price-asc':
-                products.sort((a, b) => a.price - b.price);
-                break;
-            case 'price-desc':
-                products.sort((a, b) => b.price - a.price);
-                break;
-            case 'name-asc':
-                products.sort((a, b) => a.name.localeCompare(b.name));
-                break;
-            case 'name-desc':
-                products.sort((a, b) => b.name.localeCompare(a.name));
-                break;
+        if (sortOptions) {
+            const sortValue = sortOptions.value;
+            switch (sortValue) {
+                case 'price-asc':
+                    products.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    products.sort((a, b) => b.price - a.price);
+                    break;
+                case 'name-asc':
+                    products.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    products.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+            }
         }
     }
 
