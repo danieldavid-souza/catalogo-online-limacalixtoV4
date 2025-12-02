@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
-    "seed:local": "node seed.js",
-    "seed:pinecone": "node seed-pinecone.js"
-  },
+ "scripts": {
+  "start": "node server.js",
+  "start:prod": "node seed-pinecone.js && node server.js",
+  "seed:local": "node seed.js",
+  "seed:pinecone": "node seed-pinecone.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

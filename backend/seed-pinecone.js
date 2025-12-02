@@ -9,6 +9,12 @@ const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
 const HUGGINGFACE_TOKEN = process.env.HUGGINGFACE_TOKEN;
 const PINECONE_INDEX_NAME = 'catalog-products'; // Defina um nome para seu índice no Pinecone
 
+// --- VERIFICAÇÃO PARA EVITAR EXECUÇÃO REPETIDA ---
+if (process.env.SKIP_PINECONE_SEED) {
+    console.log("Variável 'SKIP_PINECONE_SEED' encontrada. Pulando o seeding do Pinecone.");
+    process.exit(0); // Sai do script com sucesso, permitindo que o próximo comando (node server.js) execute.
+}
+
 if (!PINECONE_API_KEY || !HUGGINGFACE_TOKEN) {
     throw new Error("As variáveis de ambiente PINECONE_API_KEY e HUGGINGFACE_TOKEN são obrigatórias.");
 }
