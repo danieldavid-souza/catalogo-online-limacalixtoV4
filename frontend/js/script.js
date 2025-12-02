@@ -37,10 +37,11 @@ async function fetchAllProducts() {
  * Se nenhuma lista for fornecida, usa a lista completa (allProducts).
  */
 function renderProducts(productsToRender = null) {
-    if (!productGrid) return;
-    productGrid.innerHTML = ''; // Limpa o grid antes de renderizar
-
-    let products = productsToRender ? productsToRender : [...allProducts];
+    let products = productsToRender;
+    // Se a busca por IA retornou resultados, usamos eles.
+    // Se não, aplicamos os filtros locais na lista completa.
+    if (productsToRender === null) {
+        products = [...allProducts];
 
     // Se uma busca não foi feita, aplicamos os filtros locais
     if (!productsToRender) {
@@ -74,6 +75,9 @@ function renderProducts(productsToRender = null) {
                 break;
         }
     }
+
+    if (!productGrid) return;
+    productGrid.innerHTML = ''; // Limpa o grid antes de renderizar
 
     if (products.length === 0) {
         productGrid.innerHTML = '<p>Nenhum produto encontrado com os critérios selecionados.</p>';
@@ -116,7 +120,7 @@ function populateCategoryFilters() {
         categoryFiltersContainer.appendChild(label);
     });
 
-    categoryFiltersContainer.addEventListener('change', renderProducts);
+    categoryFiltersContainer.addEventListener('change', handleSearch); // MUDANÇA IMPORTANTE
 }
 
 /**
@@ -198,17 +202,22 @@ backToTopBtn.addEventListener('click', () => {
  * Função para lidar com a busca, agora usando a API de IA.
  */
 async function handleSearch() {
-    const searchTerm = searchInput.value.trim();
+    const searchTerm = searchInput ? searchInput.value.trim() : '';
+    const isPromoActive = promoFilter ? promoFilter.checked : false;
+    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
 
-    // Se a busca estiver vazia, renderiza todos os produtos com os filtros locais
-    if (!searchTerm) {
+    // Se não há termo de busca, categoria selecionada ou filtro de promoção,
+    // simplesmente renderiza a lista local completa.
+    if (!searchTerm && selectedCategories.length === 0 && !isPromoActive) {
         renderProducts();
         return;
     }
 
-    productGrid.innerHTML = '<p>Buscando com Inteligência Artificial...</p>';
+    // Se há um termo de busca, usamos a busca por IA.
+    if (searchTerm) {
+        productGrid.innerHTML = '<p>Buscando com Inteligência Artificial...</p>';
 
-    try {
+        try {
         const response = await fetch(`${apiBaseUrl}/products/ai-search?query=${encodeURIComponent(searchTerm)}`);
         if (!response.ok) {
             throw new Error('A resposta da busca por IA não foi bem-sucedida.');
@@ -216,9 +225,13 @@ async function handleSearch() {
         const { data } = await response.json();
         // Renderiza apenas os produtos retornados pela busca por IA
         renderProducts(data);
-    } catch (error) {
-        console.error('Erro na busca por IA:', error);
-        productGrid.innerHTML = '<p>Ocorreu um erro ao realizar a busca. Tente novamente.</p>';
+        } catch (error) {
+            console.error('Erro na busca por IA:', error);
+            productGrid.innerHTML = '<p>Ocorreu um erro ao realizar a busca. Tente novamente.</p>';
+        }
+    } else {
+        // Se não há termo de busca, mas há filtros, aplica os filtros locais.
+        renderProducts();
     }
 }
 
@@ -230,8 +243,8 @@ function init() {
     fetchAllProducts();
     
     // Listeners dos filtros e ordenação (exceto a busca)
-    sortOptions.addEventListener('change', renderProducts);
-    promoFilter.addEventListener('change', renderProducts);
+    sortOptions.addEventListener('change', handleSearch);
+    promoFilter.addEventListener('change', handleSearch);
 
     // Listeners dos modais
     campaignsBtn.addEventListener('click', openCampaignsModal);

@@ -210,9 +210,10 @@ app.put('/api/products/:id', (req, res) => {
                 "changes": info.changes
             });
 
-            // Sincroniza a tabela FTS com os dados atualizados
-            db.prepare(`DELETE FROM products_fts WHERE rowid = ?`).run(req.params.id);
-            db.prepare(`INSERT INTO products_fts(rowid, name, description, category) VALUES(?, ?, ?, ?)`).run(req.params.id, name, description, category);
+            // Sincroniza a tabela FTS de forma mais eficiente e segura com REPLACE.
+            // REPLACE funciona como um "upsert": atualiza a linha se o rowid já existir, ou insere uma nova se não existir.
+            const ftsSql = `REPLACE INTO products_fts(rowid, name, description, category) VALUES(?, ?, ?, ?)`;
+            db.prepare(ftsSql).run(req.params.id, name, description, category);
         }
     } catch (err) {
         res.status(500).json({ "error": err.message });
