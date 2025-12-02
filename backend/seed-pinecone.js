@@ -9,6 +9,9 @@ const PINECONE_API_KEY = process.env.PINECONE_API_KEY;
 const HUGGINGFACE_TOKEN = process.env.HUGGINGFACE_TOKEN;
 const PINECONE_INDEX_NAME = 'catalog-products'; // Defina um nome para seu índice no Pinecone
 
+console.log("PINECONE_API_KEY (primeiros 5 chars):", PINECONE_API_KEY ? PINECONE_API_KEY.substring(0, 5) : "UNDEFINED");
+console.log("HUGGINGFACE_TOKEN (primeiros 5 chars):", HUGGINGFACE_TOKEN ? HUGGINGFACE_TOKEN.substring(0, 5) : "UNDEFINED");
+
 if (!PINECONE_API_KEY || !HUGGINGFACE_TOKEN) {
     throw new Error("As variáveis de ambiente PINECONE_API_KEY e HUGGINGFACE_TOKEN são obrigatórias.");
 }
