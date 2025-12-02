@@ -17,6 +17,20 @@ const productModal = document.getElementById('productModal');
 const campaignsModal = document.getElementById('campaignsModal');
 
 /**
+ * Função utilitária para Debounce. Atraso na execução de uma função para evitar
+ * chamadas excessivas durante eventos repetidos (como digitação).
+ * @param {Function} func A função a ser executada.
+ * @param {number} delay O tempo de espera em milissegundos.
+ */
+function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+/**
  * Busca todos os produtos da API e armazena localmente.
  */
 async function fetchAllProducts() {
@@ -215,7 +229,11 @@ async function handleSearch() {
 
     // Se há um termo de busca, usamos a busca por IA.
     if (searchTerm) {
-        productGrid.innerHTML = '<p>Buscando com Inteligência Artificial...</p>';
+        // Mostra um spinner de carregamento para melhor UX
+        productGrid.innerHTML = `
+            <div class="spinner-container">
+                <div class="spinner"></div> <p>Buscando com Inteligência Artificial...</p>
+            </div>`;
 
         try {
         const response = await fetch(`${apiBaseUrl}/products/ai-search?query=${encodeURIComponent(searchTerm)}`);
@@ -243,8 +261,10 @@ function init() {
     fetchAllProducts();
     
     // Listeners dos filtros e ordenação (exceto a busca)
-    sortOptions.addEventListener('change', handleSearch);
-    promoFilter.addEventListener('change', handleSearch);
+    // Não precisam de debounce pois são ações únicas
+    if (sortOptions) sortOptions.addEventListener('change', handleSearch);
+    if (promoFilter) promoFilter.addEventListener('change', handleSearch);
+    // O filtro de categoria já chama handleSearch e não precisa de debounce
 
     // Listeners dos modais
     campaignsBtn.addEventListener('click', openCampaignsModal);
@@ -264,11 +284,13 @@ function init() {
         }
     });
 
-    // Novo listener para a busca
-    // Usamos 'change' para buscar quando o usuário pressiona Enter ou clica fora do campo
-    searchInput.addEventListener('change', handleSearch);
+    // --- OTIMIZAÇÃO DA BUSCA COM DEBOUNCE ---
+    // Cria uma versão "debounced" da nossa função de busca
+    const debouncedSearch = debounce(handleSearch, 400); // Atraso de 400ms
+    // Aciona a busca "debounced" sempre que o usuário digita no campo
+    if (searchInput) searchInput.addEventListener('input', debouncedSearch);
     // Adicionamos um listener para o evento de limpar a busca (ícone 'x' no campo de busca)
-    searchInput.addEventListener('search', () => !searchInput.value && handleSearch());
+    if (searchInput) searchInput.addEventListener('search', () => !searchInput.value && handleSearch());
 }
 
 document.addEventListener('DOMContentLoaded', init);
