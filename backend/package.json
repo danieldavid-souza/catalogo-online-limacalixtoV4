@@ -5,16 +5,20 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm rebuild sqlite3 --build-from-source",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "seed:local": "node seed.js",
+    "seed:pinecone": "node seed-pinecone.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@huggingface/inference": "^4.13.4",
+    "@pinecone-database/pinecone": "^6.1.3",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "sqlite3": "^5.1.7"
+    "dotenv": "^16.4.5",
+    "better-sqlite3": "^11.1.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
