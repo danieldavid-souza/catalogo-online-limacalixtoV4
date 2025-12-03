@@ -22,22 +22,8 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
     const insertSql = `INSERT INTO products (name, description, price, category, google_drive_link, image_url, on_sale) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
     try {
-        // 1. Garante que a tabela 'products' exista
-        // Garante que a tabela 'products' exista e inclua a coluna 'campaign_id'
-        db.exec(`CREATE TABLE IF NOT EXISTS products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                description TEXT,
-                price REAL,
-                category TEXT,
-                google_drive_link TEXT,
-                image_url TEXT,
-                on_sale INTEGER DEFAULT 0,
-                campaign_id INTEGER DEFAULT NULL
-            )`);
-        console.log("Tabela 'products' garantida.");
-
-        // 2. Limpa a tabela antes de inserir para evitar duplicatas
+        // Limpa a tabela antes de inserir para evitar duplicatas.
+        // A criação da tabela agora é responsabilidade exclusiva do server.js.
         db.exec("DELETE FROM products");
         console.log("Tabela 'products' limpa com sucesso.");
 
