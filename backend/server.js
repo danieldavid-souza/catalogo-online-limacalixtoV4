@@ -138,24 +138,6 @@ app.get('/api/products/ai-search', async (req, res) => {
     }
 });
 
-// --- ROTA PARA PRODUTOS DE UMA CAMPANHA (DEVE VIR ANTES DA ROTA /:id) ---
-app.get('/api/campaigns/:id/products', (req, res) => {
-    const campaignId = req.params.id;
-    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
-
-    try {
-        const stmt = db.prepare(sql);
-        const rows = stmt.all(campaignId);
-        res.json({
-            "message": "success",
-            "data": rows
-        });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
-});
-
-
 // ROTA 2: Obter um único produto pelo ID (Read)
 app.get('/api/products/:id', (req, res) => {
     const sql = "SELECT * FROM products WHERE id = ?";
@@ -279,24 +261,6 @@ app.get('/api/campaigns', (req, res) => {
     }
 });
 
-// --- ROTA PARA PRODUTOS DE UMA CAMPANHA (DEVE VIR ANTES DA ROTA /:id) ---
-app.get('/api/campaigns/:id/products', (req, res) => {
-    const campaignId = req.params.id;
-    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
-
-    try {
-        const stmt = db.prepare(sql);
-        const rows = stmt.all(campaignId);
-        res.json({
-            "message": "success",
-            "data": rows
-        });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
-});
-
-
 // ROTA 2: Obter uma única campanha pelo ID (Read)
 app.get('/api/campaigns/:id', (req, res) => {
     const sql = "SELECT * FROM campaigns WHERE id = ?";
@@ -311,6 +275,29 @@ app.get('/api/campaigns/:id', (req, res) => {
         } else {
             res.status(404).json({ "message": "Campanha não encontrada." });
         }
+    } catch (err) {
+        res.status(500).json({ "error": err.message });
+    }
+});
+
+// ROTA 3: Cadastrar uma nova campanha (Create)
+app.post('/api/campaigns', (req, res) => {
+    const { title, description, image_url } = req.body;
+    if (!title) {
+        res.status(400).json({ "error": "O título da campanha é obrigatório." });
+        return;
+    }
+
+    const sql = `INSERT INTO campaigns (title, description, image_url) VALUES (?, ?, ?)`;
+    const params = [title, description, image_url];
+
+    try {
+        const stmt = db.prepare(sql);
+        const info = stmt.run(params);
+        res.status(201).json({
+            "message": "Campanha cadastrada com sucesso!",
+            "data": { id: info.lastInsertRowid, ...req.body }
+        });
     } catch (err) {
         res.status(500).json({ "error": err.message });
     }
