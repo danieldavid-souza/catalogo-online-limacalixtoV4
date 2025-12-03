@@ -116,8 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const option = document.createElement('option');
                 option.value = campaign.id; 
                 option.textContent = campaign.title;
-                campaignFilter.appendChild(option);
-                productCampaignSelect.appendChild(option);
+                campaignFilter.appendChild(option.cloneNode(true));
+                productCampaignSelect.appendChild(option.cloneNode(true));
             });
 
         } catch (error) {
