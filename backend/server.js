@@ -261,6 +261,23 @@ app.get('/api/campaigns', (req, res) => {
     }
 });
 
+// --- ROTA PARA PRODUTOS DE UMA CAMPANHA (DEVE VIR ANTES DA ROTA /:id) ---
+app.get('/api/campaigns/:id/products', (req, res) => {
+    const campaignId = req.params.id;
+    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
+
+    try {
+        const stmt = db.prepare(sql);
+        const rows = stmt.all(campaignId);
+        res.json({
+            "message": "success",
+            "data": rows
+        });
+    } catch (err) {
+        res.status(500).json({ "error": err.message });
+    }
+});
+
 // ROTA 2: Obter uma única campanha pelo ID (Read)
 app.get('/api/campaigns/:id', (req, res) => {
     const sql = "SELECT * FROM campaigns WHERE id = ?";
@@ -280,26 +297,6 @@ app.get('/api/campaigns/:id', (req, res) => {
     }
 });
 
-// --- ROTA PARA PRODUTOS DE UMA CAMPANHA (DEVE VIR DEPOIS da rota genérica /:id) ---
-// Esta rota está correta aqui, o problema era a ordem das rotas de produtos.
-// A rota /api/campaigns/:id/products não conflita com /api/campaigns/:id
-// porque a parte "/products" a torna única. O erro anterior era um sintoma
-// de um problema de ordem em outro lugar.
-app.get('/api/campaigns/:id/products', (req, res) => {
-    const campaignId = req.params.id;
-    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
-
-    try {
-        const stmt = db.prepare(sql);
-        const rows = stmt.all(campaignId);
-        res.json({
-            "message": "success",
-            "data": rows
-        });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
-});
 // ROTA 3: Cadastrar uma nova campanha (Create)
 app.post('/api/campaigns', (req, res) => {
     const { title, description, image_url } = req.body;
