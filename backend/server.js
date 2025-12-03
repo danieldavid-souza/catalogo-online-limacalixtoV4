@@ -261,6 +261,24 @@ app.get('/api/campaigns', (req, res) => {
     }
 });
 
+// --- ROTA PARA PRODUTOS DE UMA CAMPANHA (DEVE VIR ANTES DA ROTA /:id) ---
+app.get('/api/campaigns/:id/products', (req, res) => {
+    const campaignId = req.params.id;
+    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
+
+    try {
+        const stmt = db.prepare(sql);
+        const rows = stmt.all(campaignId);
+        res.json({
+            "message": "success",
+            "data": rows
+        });
+    } catch (err) {
+        res.status(500).json({ "error": err.message });
+    }
+});
+
+
 // ROTA 2: Obter uma única campanha pelo ID (Read)
 app.get('/api/campaigns/:id', (req, res) => {
     const sql = "SELECT * FROM campaigns WHERE id = ?";
