@@ -5,15 +5,16 @@
 const express = require('express');
 
 // --- VERIFICAÇÃO DE VARIÁVEIS DE AMBIENTE ---
-const requiredEnvVars = ['PINECONE_API_KEY', 'HUGGINGFACE_TOKEN'];
+const requiredEnvVars = ['PINECONE_API_KEY', 'HUGGINGFACE_TOKEN', 'DATABASE_URL'];
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingVars.length > 0) {
   console.error(`ERRO: As seguintes variáveis de ambiente são obrigatórias: ${missingVars.join(', ')}`);
+  console.error('DATABASE_URL deve ser a string de conexão do Supabase (PostgreSQL).');
   process.exit(1); // Encerra o processo com um código de erro
 }
 
-const Database = require('better-sqlite3'); // Substitui o sqlite3
+const { Pool } = require('pg'); // Cliente PostgreSQL
 const cors = require('cors');
 
 // --- INICIALIZAÇÃO DOS CLIENTES DE IA ---
@@ -71,30 +72,28 @@ app.get('/', (req, res) => {
 
 // ROTA 1: Listar todos os produtos (Read)
 app.get('/api/products', (req, res) => {
+    // A busca FTS do SQLite não funciona aqui. Simplificamos para uma busca com LIKE.
+    // A busca por IA continua sendo a principal.
     const { search } = req.query;
-    let sql;
+    let sql = "SELECT * FROM products";
     const params = [];
 
     if (search) {
-        // A busca agora usa a tabela FTS, que é muito mais poderosa
-        // O 'ORDER BY rank' coloca os resultados mais relevantes primeiro
-        sql = `SELECT p.* FROM products p JOIN products_fts fts ON p.id = fts.rowid WHERE fts.products_fts MATCH ? ORDER BY rank`;
-        // Adicionamos '*' para permitir buscas parciais (prefixo)
-        params.push(search + '*');
+        sql += " WHERE name ILIKE $1 OR description ILIKE $1 ORDER BY name";
+        params.push(`%${search}%`);
     } else {
-        sql = "SELECT * FROM products ORDER BY name";
+        sql += " ORDER BY name";
     }
 
-    try {
-        const stmt = db.prepare(sql);
-        const rows = stmt.all(params);
+    pool.query(sql, params, (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
         res.json({
             "message": "success",
-            "data": rows
+            "data": result.rows
         });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // ROTA DE BUSCA POR IA (DEVE VIR ANTES da rota genérica /:id)
@@ -127,11 +126,11 @@ app.get('/api/products/ai-search', async (req, res) => {
         }
 
         // 4. Busca os detalhes completos dos produtos no SQLite usando os IDs
-        const placeholders = productIds.map(() => '?').join(',');
+        const placeholders = productIds.map((_, i) => `$${i + 1}`).join(',');
         const sql = `SELECT * FROM products WHERE id IN (${placeholders}) ORDER BY name`;
 
-        const stmt = db.prepare(sql);
-        const rows = stmt.all(productIds);
+        const result = await pool.query(sql, productIds);
+        const rows = result.rows;
         res.json({ "message": "success", "data": rows });
     } catch (error) {
         res.status(500).json({ "error": "Erro durante a busca por IA: " + error.message });
@@ -140,21 +139,20 @@ app.get('/api/products/ai-search', async (req, res) => {
 
 // ROTA 2: Obter um único produto pelo ID (Read)
 app.get('/api/products/:id', (req, res) => {
-    const sql = "SELECT * FROM products WHERE id = ?";
-    try {
-        const stmt = db.prepare(sql);
-        const row = stmt.get(req.params.id);
-        if (row) {
+    const sql = "SELECT * FROM products WHERE id = $1";
+    pool.query(sql, [req.params.id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
+        if (result.rows.length > 0) {
             res.json({
                 "message": "success",
-                "data": row
+                "data": result.rows[0]
             });
         } else {
             res.status(404).json({ "message": "Produto não encontrado." });
         }
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // ROTA 3: Cadastrar um novo produto (Create)
@@ -165,25 +163,20 @@ app.post('/api/products', (req, res) => {
         return;
     }
 
-    const sql = `INSERT INTO products (name, description, price, category, google_drive_link, image_url, on_sale) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, price, category, google_drive_link, image_url, on_sale ? 1 : 0];
+    const sql = `INSERT INTO products (name, description, price, category, google_drive_link, image_url, on_sale, campaign_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`;
+    const params = [name, description, price, category, google_drive_link, image_url, on_sale, campaign_id || null];
 
-    try {
-        const stmt = db.prepare(sql);
-        const info = stmt.run(params);
-        const newProductId = info.lastInsertRowid;
-
+    pool.query(sql, params, (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
+        const newProductId = result.rows[0].id;
         res.status(201).json({
             "message": "Produto cadastrado com sucesso!",
             "data": { id: newProductId, ...req.body }
         });
-
-        // Sincroniza a tabela FTS com os novos dados
-        const ftsSql = `INSERT INTO products_fts(rowid, name, description, category) VALUES(?, ?, ?, ?)`;
-        db.prepare(ftsSql).run(newProductId, name, description, category);
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+        // A sincronização com FTS não é mais necessária
+    });
 });
 
 // ROTA 4: Editar um produto existente (Update)
@@ -196,52 +189,45 @@ app.put('/api/products/:id', (req, res) => {
                     category = COALESCE(?, category), 
                     google_drive_link = COALESCE(?, google_drive_link),
                     image_url = COALESCE(?, image_url),
-                    on_sale = COALESCE(?, on_sale),
+                    on_sale = COALESCE(?, on_sale::int)::boolean,
                     campaign_id = ?
                  WHERE id = ?`;
     
+    // A sintaxe do PostgreSQL é um pouco diferente. Usamos $1, $2, etc.
+    const pgSql = `UPDATE products SET 
+                    name = $1, description = $2, price = $3, category = $4, 
+                    google_drive_link = $5, image_url = $6, on_sale = $7, campaign_id = $8
+                 WHERE id = $9`;
     const params = [name, description, price, category, google_drive_link, image_url, on_sale, campaign_id, req.params.id];
 
-    try {
-        const stmt = db.prepare(sql);
-        const info = stmt.run(params);
-
-        if (info.changes === 0) {
+    pool.query(pgSql, params, (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
+        if (result.rowCount === 0) {
             res.status(404).json({ "message": "Produto não encontrado." });
         } else {
             res.json({
                 "message": `Produto com ID ${req.params.id} atualizado com sucesso.`,
-                "changes": info.changes
+                "changes": result.rowCount
             });
-
-            // Sincroniza a tabela FTS de forma mais eficiente e segura com REPLACE.
-            // REPLACE funciona como um "upsert": atualiza a linha se o rowid já existir, ou insere uma nova se não existir.
-            const ftsSql = `REPLACE INTO products_fts(rowid, name, description, category) VALUES(?, ?, ?, ?)`;
-            db.prepare(ftsSql).run(req.params.id, name, description, category);
         }
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // ROTA 5: Excluir um produto (Delete)
 app.delete('/api/products/:id', (req, res) => {
-    const sql = 'DELETE FROM products WHERE id = ?';
-    try {
-        const stmt = db.prepare(sql);
-        const info = stmt.run(req.params.id);
-
-        if (info.changes === 0) {
+    const sql = 'DELETE FROM products WHERE id = $1';
+    pool.query(sql, [req.params.id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
+        if (result.rowCount === 0) {
             res.status(404).json({ "message": "Produto não encontrado." });
         } else {
-            res.json({ "message": `Produto com ID ${req.params.id} deletado com sucesso.`, "changes": info.changes });
-            
-            // Sincroniza a tabela FTS removendo o produto
-            db.prepare(`DELETE FROM products_fts WHERE rowid = ?`).run(req.params.id);
+            res.json({ "message": `Produto com ID ${req.params.id} deletado com sucesso.`, "changes": result.rowCount });
         }
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // --- ROTAS DO CRUD DE CAMPANHAS ---
@@ -249,52 +235,49 @@ app.delete('/api/products/:id', (req, res) => {
 // ROTA 1: Listar todas as campanhas (Read)
 app.get('/api/campaigns', (req, res) => {
     const sql = "SELECT * FROM campaigns ORDER BY title";
-    try {
-        const stmt = db.prepare(sql);
-        const rows = stmt.all();
+    pool.query(sql, (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
         res.json({
             "message": "success",
-            "data": rows
+            "data": result.rows
         });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // --- ROTA PARA PRODUTOS DE UMA CAMPANHA (DEVE VIR ANTES DA ROTA /:id) ---
 app.get('/api/campaigns/:id/products', (req, res) => {
     const campaignId = req.params.id;
-    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
+    const sql = "SELECT * FROM products WHERE campaign_id = $1 ORDER BY name";
 
-    try {
-        const stmt = db.prepare(sql);
-        const rows = stmt.all(campaignId);
+    pool.query(sql, [campaignId], (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
         res.json({
             "message": "success",
-            "data": rows
+            "data": result.rows
         });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // ROTA 2: Obter uma única campanha pelo ID (Read)
 app.get('/api/campaigns/:id', (req, res) => {
-    const sql = "SELECT * FROM campaigns WHERE id = ?";
-    try {
-        const stmt = db.prepare(sql);
-        const row = stmt.get(req.params.id);
-        if (row) {
+    const sql = "SELECT * FROM campaigns WHERE id = $1";
+    pool.query(sql, [req.params.id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
+        if (result.rows.length > 0) {
             res.json({
                 "message": "success",
-                "data": row
+                "data": result.rows[0]
             });
         } else {
             res.status(404).json({ "message": "Campanha não encontrada." });
         }
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // ROTA 3: Cadastrar uma nova campanha (Create)
@@ -305,19 +288,18 @@ app.post('/api/campaigns', (req, res) => {
         return;
     }
 
-    const sql = `INSERT INTO campaigns (title, description, image_url) VALUES (?, ?, ?)`;
+    const sql = `INSERT INTO campaigns (title, description, image_url) VALUES ($1, $2, $3) RETURNING id`;
     const params = [title, description, image_url];
 
-    try {
-        const stmt = db.prepare(sql);
-        const info = stmt.run(params);
+    pool.query(sql, params, (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
         res.status(201).json({
             "message": "Campanha cadastrada com sucesso!",
-            "data": { id: info.lastInsertRowid, ...req.body }
+            "data": { id: result.rows[0].id, ...req.body }
         });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // ROTA 4: Editar uma campanha existente (Update)
@@ -327,32 +309,29 @@ app.put('/api/campaigns/:id', (req, res) => {
                     title = COALESCE(?, title), 
                     description = COALESCE(?, description), 
                     image_url = COALESCE(?, image_url)
-                 WHERE id = ?`;
+                 WHERE id = ?`; // Esta sintaxe não é ideal para pg
     
+    const pgSql = `UPDATE campaigns SET title = $1, description = $2, image_url = $3 WHERE id = $4`;
     const params = [title, description, image_url, req.params.id];
 
-    try {
-        const stmt = db.prepare(sql);
-        const info = stmt.run(params);
+    pool.query(pgSql, params, (err, result) => {
+        if (err) {
+            return res.status(500).json({ "error": err.message });
+        }
         res.json({
             "message": `Campanha com ID ${req.params.id} atualizada com sucesso.`,
-            "changes": info.changes
+            "changes": result.rowCount
         });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    });
 });
 
 // ROTA 5: Excluir uma campanha (Delete)
 app.delete('/api/campaigns/:id', (req, res) => {
-    const sql = 'DELETE FROM campaigns WHERE id = ?';
-    try {
-        const stmt = db.prepare(sql);
-        const info = stmt.run(req.params.id);
-        res.json({ "message": `Campanha com ID ${req.params.id} deletada com sucesso.`, "changes": info.changes });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
+    const sql = 'DELETE FROM campaigns WHERE id = $1';
+    pool.query(sql, [req.params.id], (err, result) => {
+        if (err) { return res.status(500).json({ "error": err.message }); }
+        res.json({ "message": `Campanha com ID ${req.params.id} deletada com sucesso.`, "changes": result.rowCount });
+    });
 });
 
 // Inicia o servidor
