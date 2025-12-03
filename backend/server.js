@@ -48,7 +48,9 @@ try {
         category TEXT,
         google_drive_link TEXT,
         image_url TEXT,
-        on_sale INTEGER DEFAULT 0
+        on_sale INTEGER DEFAULT 0,
+        campaign_id INTEGER,
+        FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE SET NULL
     )`);
 
     // Cria a tabela virtual FTS5 para busca inteligente
@@ -185,7 +187,7 @@ app.post('/api/products', (req, res) => {
 
 // ROTA 4: Editar um produto existente (Update)
 app.put('/api/products/:id', (req, res) => {
-    const { name, description, price, category, google_drive_link, image_url, on_sale } = req.body;
+    const { name, description, price, category, google_drive_link, image_url, on_sale, campaign_id } = req.body;
     const sql = `UPDATE products SET 
                     name = COALESCE(?, name), 
                     description = COALESCE(?, description), 
@@ -193,10 +195,11 @@ app.put('/api/products/:id', (req, res) => {
                     category = COALESCE(?, category), 
                     google_drive_link = COALESCE(?, google_drive_link),
                     image_url = COALESCE(?, image_url),
-                    on_sale = COALESCE(?, on_sale)
+                    on_sale = COALESCE(?, on_sale),
+                    campaign_id = ?
                  WHERE id = ?`;
     
-    const params = [name, description, price, category, google_drive_link, image_url, on_sale, req.params.id];
+    const params = [name, description, price, category, google_drive_link, image_url, on_sale, campaign_id, req.params.id];
 
     try {
         const stmt = db.prepare(sql);
@@ -239,6 +242,24 @@ app.delete('/api/products/:id', (req, res) => {
         res.status(500).json({ "error": err.message });
     }
 });
+
+// --- NOVA ROTA PARA PRODUTOS DE UMA CAMPANHA ---
+app.get('/api/campaigns/:id/products', (req, res) => {
+    const campaignId = req.params.id;
+    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
+
+    try {
+        const stmt = db.prepare(sql);
+        const rows = stmt.all(campaignId);
+        res.json({
+            "message": "success",
+            "data": rows
+        });
+    } catch (err) {
+        res.status(500).json({ "error": err.message });
+    }
+});
+
 
 // --- ROTAS DO CRUD DE CAMPANHAS ---
 

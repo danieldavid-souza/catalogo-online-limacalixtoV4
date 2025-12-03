@@ -183,6 +183,7 @@ async function openCampaignsModal() {
             data.forEach(campaign => {
                 const campaignElement = document.createElement('div');
                 campaignElement.className = 'campaign-item';
+                campaignElement.dataset.campaignId = campaign.id; // Adiciona o ID da campanha
                 campaignElement.innerHTML = `
                     <img src="${campaign.image_url || 'https://via.placeholder.com/400x200'}" alt="${campaign.title}">
                     <h3>${campaign.title}</h3>
@@ -194,6 +195,29 @@ async function openCampaignsModal() {
         campaignsModal.style.display = 'flex';
     } catch (error) {
         console.error('Erro ao buscar campanhas:', error);
+    }
+}
+
+/**
+ * Busca e renderiza produtos de uma campanha específica.
+ * @param {string} campaignId O ID da campanha.
+ */
+async function fetchAndRenderCampaignProducts(campaignId) {
+    // Fecha o modal de campanhas
+    if (campaignsModal) campaignsModal.style.display = 'none';
+    if (!productGrid) return;
+
+    // Mostra um feedback de carregamento
+    productGrid.innerHTML = `<p>Carregando produtos da campanha...</p>`;
+
+    try {
+        const response = await fetch(`${apiBaseUrl}/campaigns/${campaignId}/products`);
+        if (!response.ok) throw new Error('Falha ao buscar produtos da campanha.');
+        const { data } = await response.json();
+        renderProducts(data); // Reutiliza a função de renderização com os produtos da campanha
+    } catch (error) {
+        console.error('Erro ao buscar produtos da campanha:', error);
+        productGrid.innerHTML = '<p>Não foi possível carregar os produtos desta campanha.</p>';
     }
 }
 
@@ -274,6 +298,13 @@ function init() {
         const viewDetailsBtn = e.target.closest('.btn-view-details'); // Agora o modal abre ao clicar no botão "Ver Detalhes"
         if (viewDetailsBtn) {
             openProductModal(viewDetailsBtn.dataset.id);
+            return;
+        }
+
+        // Ver se o clique foi em um item de campanha dentro do modal
+        const campaignItem = e.target.closest('.campaign-item');
+        if (campaignItem && campaignItem.dataset.campaignId) {
+            fetchAndRenderCampaignProducts(campaignItem.dataset.campaignId);
             return;
         }
 

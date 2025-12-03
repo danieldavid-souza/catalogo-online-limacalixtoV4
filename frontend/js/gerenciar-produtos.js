@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const productIdField = document.getElementById('product-id');
     const cancelEditBtn = document.getElementById('cancel-edit');
     const campaignFilter = document.getElementById('campaign-filter');
+    const productCampaignSelect = document.getElementById('product-campaign'); // Novo select no formulário
 
     // --- LÓGICA DE UPLOAD DE IMAGEM ---
     const CLOUDINARY_CLOUD_NAME = 'dayx6fx1n'; // <-- SUBSTITUA PELO SEU CLOUD NAME
@@ -70,9 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let productsToRender = allProducts;
 
         if (filter) {
-            // Esta é uma simplificação. O ideal seria ter a campanha no produto.
-            // Por agora, vamos filtrar pelo nome da categoria.
-            productsToRender = allProducts.filter(p => p.category === filter);
+            // Agora filtramos pelo ID da campanha corretamente
+            productsToRender = allProducts.filter(p => p.campaign_id == filter);
         }
 
         productList.innerHTML = ''; // Limpa a lista antes de adicionar os itens
@@ -107,13 +107,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!campaignsResponse.ok) return;
             const campaignsData = await campaignsResponse.json();
             
+            // Popula o filtro da lista de produtos
             campaignFilter.innerHTML = '<option value="">Todas as Campanhas</option>';
+            // Popula o select do formulário de produto
+            productCampaignSelect.innerHTML = '<option value="">Nenhuma</option>';
+
             campaignsData.data.forEach(campaign => {
                 const option = document.createElement('option');
-                // Simplificação: o valor do filtro é o título da campanha, que vamos comparar com a categoria do produto
-                option.value = campaign.title.toLowerCase(); 
+                option.value = campaign.id; 
                 option.textContent = campaign.title;
                 campaignFilter.appendChild(option);
+                productCampaignSelect.appendChild(option);
             });
 
         } catch (error) {
@@ -128,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         productIdField.value = '';
         formTitle.textContent = 'Adicionar Novo Produto';
         cancelEditBtn.style.display = 'none';
+        productCampaignSelect.value = ''; // Reseta o select de campanha
         imagePreview.innerHTML = ''; // Limpa a pré-visualização da imagem
     };
 
@@ -146,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             google_drive_link: document.getElementById('google_drive_link').value,
             image_url: document.getElementById('image_url').value,
             on_sale: document.getElementById('on_sale').checked ? 1 : 0,
+            campaign_id: document.getElementById('product-campaign').value || null,
         };
 
         try {
@@ -213,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('category').value = data.category;
                 document.getElementById('google_drive_link').value = data.google_drive_link;
                 document.getElementById('image_url').value = data.image_url;
+                document.getElementById('product-campaign').value = data.campaign_id || '';
                 document.getElementById('on_sale').checked = data.on_sale === 1;
                 
                 // Mostra a pré-visualização da imagem existente
