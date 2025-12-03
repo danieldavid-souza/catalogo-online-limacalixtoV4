@@ -23,6 +23,7 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
 
     try {
         // 1. Garante que a tabela 'products' exista
+        // Garante que a tabela 'products' exista e inclua a coluna 'campaign_id'
         db.exec(`CREATE TABLE IF NOT EXISTS products (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -31,7 +32,8 @@ fs.readFile('./data.json', 'utf8', (err, data) => {
                 category TEXT,
                 google_drive_link TEXT,
                 image_url TEXT,
-                on_sale INTEGER DEFAULT 0
+                on_sale INTEGER DEFAULT 0,
+                campaign_id INTEGER DEFAULT NULL
             )`);
         console.log("Tabela 'products' garantida.");
 
