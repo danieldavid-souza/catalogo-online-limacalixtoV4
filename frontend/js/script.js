@@ -208,7 +208,10 @@ async function fetchAndRenderCampaignProducts(campaignId) {
     if (!productGrid) return;
 
     // Mostra um feedback de carregamento
-    productGrid.innerHTML = `<p>Carregando produtos da campanha...</p>`;
+    productGrid.innerHTML = `
+        <div class="spinner-container">
+            <div class="spinner"></div> <p>Carregando produtos da campanha...</p>
+        </div>`;
 
     try {
         const response = await fetch(`${apiBaseUrl}/campaigns/${campaignId}/products`);
