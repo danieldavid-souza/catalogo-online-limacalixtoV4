@@ -39,6 +39,14 @@ try {
     db.pragma('journal_mode = WAL'); // Melhora a concorrência
     console.log("Conectado ao banco de dados SQLite com better-sqlite3.");
 
+    // Cria a tabela de campanhas se ela não existir
+    db.exec(`CREATE TABLE IF NOT EXISTS campaigns (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        description TEXT,
+        image_url TEXT
+    )`);
+
     // Cria a tabela de produtos se ela não existir (a tabela FTS depende dela)
     db.exec(`CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
