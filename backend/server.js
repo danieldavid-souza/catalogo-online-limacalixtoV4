@@ -167,14 +167,14 @@ app.get('/api/products/:id', (req, res) => {
 
 // ROTA 3: Cadastrar um novo produto (Create)
 app.post('/api/products', (req, res) => {
-    const { name, description, price, category, google_drive_link, image_url, on_sale } = req.body;
+    const { name, description, price, category, google_drive_link, image_url, on_sale, campaign_id } = req.body;
     if (!name) {
         res.status(400).json({ "error": "O nome do produto é obrigatório." });
         return;
     }
 
-    const sql = `INSERT INTO products (name, description, price, category, google_drive_link, image_url, on_sale) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, price, category, google_drive_link, image_url, on_sale ? 1 : 0];
+    const sql = `INSERT INTO products (name, description, price, category, google_drive_link, image_url, on_sale, campaign_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, price, category, google_drive_link, image_url, on_sale ? 1 : 0, campaign_id || null];
 
     try {
         const stmt = db.prepare(sql);
