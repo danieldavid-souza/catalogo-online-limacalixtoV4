@@ -97,7 +97,7 @@ app.get('/api/products', (req, res) => {
     }
 });
 
-// ROTA DE BUSCA POR IA (NOVA)
+// ROTA DE BUSCA POR IA (DEVE VIR ANTES DA ROTA /:id)
 app.get('/api/products/ai-search', async (req, res) => {
     const { query } = req.query;
 
@@ -156,6 +156,7 @@ app.get('/api/products/:id', (req, res) => {
         res.status(500).json({ "error": err.message });
     }
 });
+
 // ROTA 3: Cadastrar um novo produto (Create)
 app.post('/api/products', (req, res) => {
     const { name, description, price, category, google_drive_link, image_url, on_sale } = req.body;
@@ -243,24 +244,6 @@ app.delete('/api/products/:id', (req, res) => {
     }
 });
 
-// --- NOVA ROTA PARA PRODUTOS DE UMA CAMPANHA ---
-app.get('/api/campaigns/:id/products', (req, res) => {
-    const campaignId = req.params.id;
-    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
-
-    try {
-        const stmt = db.prepare(sql);
-        const rows = stmt.all(campaignId);
-        res.json({
-            "message": "success",
-            "data": rows
-        });
-    } catch (err) {
-        res.status(500).json({ "error": err.message });
-    }
-});
-
-
 // --- ROTAS DO CRUD DE CAMPANHAS ---
 
 // ROTA 1: Listar todas as campanhas (Read)
@@ -277,6 +260,24 @@ app.get('/api/campaigns', (req, res) => {
         res.status(500).json({ "error": err.message });
     }
 });
+
+// --- ROTA PARA PRODUTOS DE UMA CAMPANHA (DEVE VIR ANTES DA ROTA /:id) ---
+app.get('/api/campaigns/:id/products', (req, res) => {
+    const campaignId = req.params.id;
+    const sql = "SELECT * FROM products WHERE campaign_id = ? ORDER BY name";
+
+    try {
+        const stmt = db.prepare(sql);
+        const rows = stmt.all(campaignId);
+        res.json({
+            "message": "success",
+            "data": rows
+        });
+    } catch (err) {
+        res.status(500).json({ "error": err.message });
+    }
+});
+
 
 // ROTA 2: Obter uma única campanha pelo ID (Read)
 app.get('/api/campaigns/:id', (req, res) => {
